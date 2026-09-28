@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bavaria Parts — Pièces détachées pour BMW</title>
+  <meta name="description" content="Bavaria Parts : pièces détachées d'origine et adaptables pour BMW. Freinage, moteur, suspension, carrosserie, éclairage. Livraison 48h.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="topbar">Livraison offerte dès 99 € · Expédition sous 24h · Retour gratuit 30 jours</div>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a href="#" class="logo" aria-label="Bavaria Parts, accueil">
+        <span class="logo__mark" aria-hidden="true"></span>
+        <span class="logo__text">Bavaria<strong>Parts</strong></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#catalogue">Catalogue</a>
+        <a href="#categories">Catégories</a>
+        <a href="#avantages">Pourquoi nous</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="header__actions">
+        <button class="icon-btn" id="cartBtn" aria-label="Ouvrir le panier">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <span class="badge" id="cartCount">0</span>
+        </button>
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <p class="eyebrow">Spécialiste pièces BMW depuis 2012</p>
+          <h1>La bonne pièce pour votre BMW, du premier coup.</h1>
+          <p class="lead">Plus de 2&nbsp;000 références d'origine et de qualité équivalente, vérifiées par nos techniciens. Sélectionnez votre modèle pour ne voir que les pièces compatibles.</p>
+
+          <form class="finder" id="finder">
+            <label>
+              <span>Modèle</span>
+              <select id="finderModel">
+                <option value="">Tous les modèles</option>
+              </select>
+            </label>
+            <label>
+              <span>Catégorie</span>
+              <select id="finderCategory">
+                <option value="">Toutes les catégories</option>
+              </select>
+            </label>
+            <button class="btn btn--primary" type="submit">Trouver mes pièces</button>
+          </form>
+        </div>
+        <div class="hero__visual" aria-hidden="true">
+          <svg viewBox="0 0 320 320" class="hero__wheel">
+            <circle cx="160" cy="160" r="150" fill="none" stroke="currentColor" stroke-width="18" opacity=".9"/>
+            <circle cx="160" cy="160" r="118" fill="none" stroke="currentColor" stroke-width="3" opacity=".35"/>
+            <g stroke="currentColor" stroke-width="14" stroke-linecap="round" opacity=".85">
+              <line x1="160" y1="160" x2="160" y2="48"/>
+              <line x1="160" y1="160" x2="266" y2="125"/>
+              <line x1="160" y1="160" x2="226" y2="251"/>
+              <line x1="160" y1="160" x2="94" y2="251"/>
+              <line x1="160" y1="160" x2="54" y2="125"/>
+            </g>
+            <circle cx="160" cy="160" r="34" fill="currentColor"/>
+            <circle cx="160" cy="160" r="12" fill="var(--bg-dark)"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="categories">
+      <div class="container">
+        <h2 class="section__title">Catégories</h2>
+        <div class="categories" id="categoryGrid"></div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="catalogue">
+      <div class="container">
+        <div class="catalog__head">
+          <h2 class="section__title">Catalogue</h2>
+          <p class="muted" id="resultCount"></p>
+        </div>
+
+        <div class="toolbar">
+          <input type="search" id="search" placeholder="Rechercher une pièce, une référence…" aria-label="Rechercher">
+          <select id="filterModel" aria-label="Filtrer par modèle"><option value="">Tous les modèles</option></select>
+          <select id="filterCategory" aria-label="Filtrer par catégorie"><option value="">Toutes catégories</option></select>
+          <select id="sort" aria-label="Trier">
+            <option value="popular">Popularité</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+            <option value="name">Nom A→Z</option>
+          </select>
+        </div>
+
+        <div class="products" id="productGrid"></div>
+        <p class="empty" id="emptyState" hidden>Aucune pièce ne correspond à votre recherche. <button class="link" id="resetFilters">Réinitialiser les filtres</button></p>
+      </div>
+    </section>
+
+    <section class="section" id="avantages">
+      <div class="container">
+        <h2 class="section__title">Pourquoi Bavaria Parts ?</h2>
+        <div class="features">
+          <div class="feature">
+            <div class="feature__icon">✓</div>
+            <h3>Compatibilité garantie</h3>
+            <p>Chaque pièce est associée aux châssis compatibles (E90, F30, G20…). En cas d'erreur, le retour est à nos frais.</p>
+          </div>
+          <div class="feature">
+            <div class="feature__icon">⚡</div>
+            <h3>Expédition en 24h</h3>
+            <p>Commande avant 15h, expédiée le jour même depuis notre entrepôt. Livraison en 24 à 48h en France.</p>
+          </div>
+          <div class="feature">
+            <div class="feature__icon">★</div>
+            <h3>Qualité d'origine</h3>
+            <p>Pièces d'origine constructeur et équipementiers de première monte : Bosch, Brembo, Mahle, Bilstein, Hella…</p>
+          </div>
+          <div class="feature">
+            <div class="feature__icon">☎</div>
+            <h3>Conseil d'experts</h3>
+            <p>Nos techniciens spécialisés vous aident à trouver la bonne référence à partir de votre numéro de châssis.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="contact">
+      <div class="container contact">
+        <div>
+          <h2 class="section__title">Besoin d'aide pour trouver une pièce ?</h2>
+          <p class="lead">Envoyez-nous les 7 derniers caractères de votre numéro de châssis (VIN), nous vous répondons sous 2h ouvrées avec la référence exacte.</p>
+          <ul class="contact__list">
+            <li><strong>Téléphone :</strong> 01 23 45 67 89 (lun–sam, 9h–19h)</li>
+            <li><strong>E-mail :</strong> contact@bavaria-parts.example</li>
+            <li><strong>Entrepôt :</strong> 12 rue des Mécaniciens, 69000 Lyon</li>
+          </ul>
+        </div>
+        <form class="card form" id="contactForm" novalidate>
+          <label>Nom<input name="name" required autocomplete="name"></label>
+          <label>E-mail<input name="email" type="email" required autocomplete="email"></label>
+          <label>VIN (7 derniers caractères)<input name="vin" maxlength="7" pattern="[A-Za-z0-9]{7}" placeholder="ex. AB12345"></label>
+          <label>Votre demande<textarea name="message" rows="4" required></textarea></label>
+          <button class="btn btn--primary" type="submit">Envoyer</button>
+          <p class="form__msg" id="contactMsg" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <a href="#" class="logo logo--light"><span class="logo__mark" aria-hidden="true"></span><span class="logo__text">Bavaria<strong>Parts</strong></span></a>
+        <p class="footer__small">Revendeur indépendant de pièces détachées automobiles.</p>
+      </div>
+      <div class="footer__links">
+        <a href="#catalogue">Catalogue</a>
+        <a href="#contact">Contact</a>
+        <a href="#">CGV</a>
+        <a href="#">Mentions légales</a>
+      </div>
+    </div>
+    <div class="container footer__legal">
+      © <span id="year"></span> Bavaria Parts. BMW est une marque déposée de BMW AG. Bavaria Parts est un revendeur indépendant, non affilié à BMW AG. Les noms de modèles sont utilisés uniquement pour indiquer la compatibilité des pièces.
+    </div>
+  </footer>
+
+  <!-- Panier -->
+  <div class="overlay" id="overlay" hidden></div>
+  <aside class="drawer" id="cartDrawer" aria-label="Panier" aria-hidden="true">
+    <div class="drawer__head">
+      <h2>Votre panier</h2>
+      <button class="icon-btn" id="closeCart" aria-label="Fermer le panier">✕</button>
+    </div>
+    <div class="drawer__body" id="cartItems"></div>
+    <div class="drawer__foot">
+      <div class="totals">
+        <div><span>Sous-total</span><span id="subtotal">0,00 €</span></div>
+        <div><span>Livraison</span><span id="shipping">—</span></div>
+        <div class="totals__grand"><span>Total TTC</span><span id="total">0,00 €</span></div>
+      </div>
+      <p class="muted small" id="freeShipHint"></p>
+      <button class="btn btn--primary btn--block" id="checkoutBtn">Passer commande</button>
+    </div>
+  </aside>
+
+  <!-- Fiche produit -->
+  <dialog class="modal" id="productModal">
+    <button class="modal__close" data-close aria-label="Fermer">✕</button>
+    <div id="productDetail"></div>
+  </dialog>
+
+  <!-- Commande -->
+  <dialog class="modal" id="checkoutModal">
+    <button class="modal__close" data-close aria-label="Fermer">✕</button>
+    <div id="checkoutContent">
+      <h2>Finaliser la commande</h2>
+      <form class="form form--grid" id="checkoutForm" novalidate>
+        <label>Prénom<input name="firstname" required autocomplete="given-name"></label>
+        <label>Nom<input name="lastname" required autocomplete="family-name"></label>
+        <label class="span-2">E-mail<input name="email" type="email" required autocomplete="email"></label>
+        <label class="span-2">Adresse<input name="address" required autocomplete="street-address"></label>
+        <label>Code postal<input name="zip" required pattern="[0-9]{5}" inputmode="numeric" autocomplete="postal-code"></label>
+        <label>Ville<input name="city" required autocomplete="address-level2"></label>
+        <fieldset class="span-2">
+          <legend>Livraison</legend>
+          <label class="radio"><input type="radio" name="delivery" value="standard" checked> Standard 48h — <span data-ship="standard"></span></label>
+          <label class="radio"><input type="radio" name="delivery" value="express"> Express 24h — 14,90 €</label>
+        </fieldset>
+        <p class="notice span-2">Site de démonstration : aucun paiement n'est encaissé et aucune donnée n'est transmise.</p>
+        <div class="span-2 checkout__total">Total à payer : <strong id="checkoutTotal"></strong></div>
+        <button class="btn btn--primary btn--block span-2" type="submit">Confirmer la commande</button>
+      </form>
+    </div>
+    <div id="checkoutSuccess" hidden></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
