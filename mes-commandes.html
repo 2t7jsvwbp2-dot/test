@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mes commandes · Bavaria Parts</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="commandes">
+  <main id="main" class="container page page--narrow">
+    <h1>Mes commandes</h1>
+    <p class="muted">Les commandes passées depuis ce navigateur. Retrouvez ici les instructions de paiement de chaque commande.</p>
+    <div id="orders"></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    (() => {
+      const orders = store.get("orders", []);
+      $("#orders").innerHTML = orders.length
+        ? `<ul class="order-list">${orders.map((o) => `
+            <li>
+              <a href="confirmation.html?commande=${encodeURIComponent(o.id)}">
+                <span><strong>${escapeHtml(o.id)}</strong><span class="small muted">${new Date(o.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} · ${o.items.reduce((n, i) => n + i.qty, 0)} article(s) · ${o.payment === "revolut" ? "Revolut" : "Virement"}</span></span>
+                <strong>${euro(o.total)}</strong>
+              </a>
+            </li>`).join("")}</ul>`
+        : `<div class="empty"><h2>Aucune commande pour l'instant</h2><a class="btn btn--primary" href="catalogue.html">Voir le catalogue</a></div>`;
+    })();
+  </script>
+</body>
+</html>

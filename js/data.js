@@ -1,0 +1,133 @@
+// Catalogue de Bavaria Parts.
+// Pour ajouter une pièce : copiez un bloc, changez l'identifiant (id) et les
+// informations. Les images sont dans images/products/.
+
+const MODELS = [
+  { code: "E87", name: "Série 1 (E87)", years: "2004–2011" },
+  { code: "F20", name: "Série 1 (F20)", years: "2011–2019" },
+  { code: "E90", name: "Série 3 (E90)", years: "2005–2012" },
+  { code: "F30", name: "Série 3 (F30)", years: "2012–2019" },
+  { code: "G20", name: "Série 3 (G20)", years: "2019–" },
+  { code: "F10", name: "Série 5 (F10)", years: "2010–2017" },
+  { code: "G30", name: "Série 5 (G30)", years: "2017–2023" },
+  { code: "F48", name: "X1 (F48)", years: "2015–2022" },
+  { code: "F25", name: "X3 (F25)", years: "2010–2017" },
+  { code: "G01", name: "X3 (G01)", years: "2017–2024" },
+  { code: "F15", name: "X5 (F15)", years: "2013–2018" },
+  { code: "G05", name: "X5 (G05)", years: "2018–" },
+];
+
+const CATEGORIES = [
+  { id: "freinage", name: "Freinage", image: "kit-disques-plaquettes", text: "Disques, plaquettes, étriers, capteurs" },
+  { id: "moteur", name: "Moteur & filtration", image: "filtre-huile", text: "Filtres, allumage, refroidissement" },
+  { id: "suspension", name: "Suspension & direction", image: "amortisseur", text: "Amortisseurs, bras, rotules, ressorts" },
+  { id: "eclairage", name: "Éclairage", image: "phare-led", text: "Phares, feux, ampoules xénon" },
+  { id: "carrosserie", name: "Carrosserie", image: "calandre", text: "Calandres, coques, boucliers" },
+  { id: "entretien", name: "Entretien & fluides", image: "huile-5w30", text: "Huiles, liquides, batteries, balais" },
+];
+
+const ALL = MODELS.map((m) => m.code);
+
+const PRODUCTS = [
+  // ---------- Freinage ----------
+  { id: "kit-disques-plaquettes", name: "Kit disques + plaquettes avant", brand: "Brembo", ref: "BP-34116860912", oem: "34 11 6 860 912", category: "freinage", price: 189.9, oldPrice: 229.9, stock: 14, popular: 98, models: ["F30", "F20", "G20"],
+    desc: "Kit complet pour l'essieu avant : deux disques ventilés percés et un jeu de quatre plaquettes à faible émission de poussière. Le capteur d'usure est fourni.",
+    specs: { "Position": "Essieu avant", "Diamètre": "312 mm", "Épaisseur": "24 mm", "Type de disque": "Ventilé, percé", "Contenu": "2 disques, 4 plaquettes, 1 capteur" } },
+  { id: "disques-arriere", name: "Paire de disques arrière", brand: "ATE", ref: "BP-34216792227", oem: "34 21 6 792 227", category: "freinage", price: 94.9, stock: 20, popular: 70, models: ["E90", "F30", "F20", "E87"],
+    desc: "Disques pleins à revêtement anticorrosion. Montage direct, sans usinage.",
+    specs: { "Position": "Essieu arrière", "Diamètre": "300 mm", "Épaisseur": "20 mm", "Type de disque": "Plein", "Contenu": "2 disques" } },
+  { id: "plaquettes-arriere", name: "Plaquettes de frein arrière", brand: "Textar", ref: "BP-34216873093", oem: "34 21 6 873 093", category: "freinage", price: 49.9, stock: 32, popular: 90, models: ["E90", "E87", "F30", "F20"],
+    desc: "Jeu de quatre plaquettes arrière, qualité première monte, homologuées ECE R90.",
+    specs: { "Position": "Essieu arrière", "Homologation": "ECE R90", "Capteur d'usure": "Préparé", "Contenu": "4 plaquettes" } },
+  { id: "capteur-usure", name: "Capteur d'usure de plaquettes", brand: "Bosch", ref: "BP-34356792289", oem: "34 35 6 792 289", category: "freinage", price: 14.5, stock: 60, popular: 72, models: ["E90", "F30", "F10", "F25", "G20", "G30"],
+    desc: "Capteur électronique d'usure. À remplacer à chaque changement de plaquettes.",
+    specs: { "Position": "Avant ou arrière", "Longueur du câble": "1 025 mm", "Connecteur": "2 broches" } },
+  { id: "etrier-frein", name: "Étrier de frein avant gauche", brand: "ATE", ref: "BP-34116797602", oem: "34 11 6 797 602", category: "freinage", price: 164.0, stock: 4, popular: 40, models: ["F10", "F15"],
+    desc: "Étrier reconditionné à neuf avec pistons et joints neufs. Une consigne est incluse dans le prix : renvoyez l'ancien étrier pour être remboursé de 30 €.",
+    specs: { "Position": "Avant gauche", "Pistons": "1", "Diamètre du piston": "60 mm", "Consigne": "30 € remboursés au retour de l'ancien étrier" } },
+  { id: "liquide-frein", name: "Liquide de frein DOT 4 (1 L)", brand: "ATE", ref: "BP-83132445530", oem: "83 13 2 445 530", category: "freinage", price: 16.9, stock: 75, popular: 66, models: ALL,
+    desc: "Liquide de frein à faible viscosité, adapté aux systèmes ABS et DSC. Remplacement conseillé tous les deux ans.",
+    specs: { "Norme": "DOT 4 LV", "Contenance": "1 L", "Point d'ébullition sec": "265 °C" } },
+
+  // ---------- Moteur ----------
+  { id: "filtre-huile", name: "Filtre à huile", brand: "Mahle", ref: "BP-11427953129", oem: "11 42 7 953 129", category: "moteur", price: 12.9, stock: 120, popular: 99, models: ["E90", "F30", "F10", "F20", "E87", "F25"],
+    desc: "Cartouche filtrante avec joints, pour moteurs diesel N47 et B47.",
+    specs: { "Type": "Cartouche", "Hauteur": "116 mm", "Diamètre": "64 mm", "Moteurs": "N47, B47" } },
+  { id: "filtre-air", name: "Filtre à air moteur", brand: "Mann-Filter", ref: "BP-13717532754", oem: "13 71 7 532 754", category: "moteur", price: 24.9, stock: 45, popular: 85, models: ["F30", "F20", "F10", "F48"],
+    desc: "Filtre à air haute capacité avec une efficacité de filtration de 99,5 %.",
+    specs: { "Type": "Panneau", "Longueur": "340 mm", "Largeur": "135 mm", "Efficacité": "99,5 %" } },
+  { id: "bougies", name: "Jeu de 4 bougies d'allumage", brand: "NGK", ref: "BP-12120037244", oem: "12 12 0 037 244", category: "moteur", price: 59.9, stock: 28, popular: 76, models: ["F30", "F20", "G20", "F48", "G01"],
+    desc: "Bougies à pointe iridium longue durée pour moteurs essence B48 et N20.",
+    specs: { "Électrode": "Iridium", "Filetage": "M12 × 1,25", "Clé": "14 mm", "Contenu": "4 bougies" } },
+  { id: "pompe-eau", name: "Pompe à eau électrique", brand: "Pierburg", ref: "BP-11517586925", oem: "11 51 7 586 925", category: "moteur", price: 319.0, oldPrice: 369.0, stock: 6, popular: 64, models: ["E90", "F10", "F25", "F30"],
+    desc: "Pompe à eau électrique livrée avec son thermostat, pour moteurs N52 et N55. C'est une pièce d'usure fréquente sur ces moteurs.",
+    specs: { "Type": "Électrique", "Moteurs": "N52, N55", "Thermostat": "Inclus", "Boulons": "Inclus" } },
+  { id: "courroie", name: "Courroie d'accessoires", brand: "Contitech", ref: "BP-11288653233", oem: "11 28 8 653 233", category: "moteur", price: 34.9, stock: 22, popular: 58, models: ["E90", "E87", "F10"],
+    desc: "Courroie à nervures 6PK pour moteur N47.",
+    specs: { "Profil": "6PK", "Longueur": "1 538 mm", "Moteur": "N47" } },
+  { id: "bobine-allumage", name: "Bobine d'allumage", brand: "Bosch", ref: "BP-12138643360", oem: "12 13 8 643 360", category: "moteur", price: 44.9, stock: 36, popular: 61, models: ["F30", "F20", "G20", "F48", "G01", "F10"],
+    desc: "Bobine crayon pour moteurs essence B48, B58, N20 et N55. Une bobine par cylindre.",
+    specs: { "Type": "Bobine crayon", "Moteurs": "B48, B58, N20, N55", "Contenu": "1 bobine" } },
+  { id: "thermostat", name: "Thermostat avec boîtier", brand: "Mahle", ref: "BP-11537549476", oem: "11 53 7 549 476", category: "moteur", price: 89.9, stock: 11, popular: 47, models: ["E90", "F10", "F25", "E87"],
+    desc: "Thermostat à cartographie électronique avec boîtier et joint.",
+    specs: { "Température d'ouverture": "97 °C", "Boîtier": "Inclus", "Joint": "Inclus" } },
+
+  // ---------- Suspension ----------
+  { id: "amortisseur", name: "Amortisseurs avant (paire)", brand: "Bilstein", ref: "BP-31316786995", oem: "31 31 6 786 995", category: "suspension", price: 279.0, stock: 8, popular: 70, models: ["F30", "F20"],
+    desc: "Paire d'amortisseurs B4 à gaz. Confort d'origine, montage sans modification.",
+    specs: { "Position": "Essieu avant", "Technologie": "Bitube à gaz", "Gamme": "B4", "Contenu": "2 amortisseurs" } },
+  { id: "bras-suspension", name: "Bras de suspension avant", brand: "Lemförder", ref: "BP-31126855741", oem: "31 12 6 855 741", category: "suspension", price: 89.9, stock: 18, popular: 66, models: ["E90", "E87", "F30"],
+    desc: "Bras inférieur livré avec la rotule et les silentblocs montés.",
+    specs: { "Position": "Avant, inférieur", "Rotule": "Montée", "Silentblocs": "Montés" } },
+  { id: "rotule-direction", name: "Rotule de direction", brand: "Lemförder", ref: "BP-32106793299", oem: "32 10 6 793 299", category: "suspension", price: 39.9, stock: 25, popular: 52, models: ["F30", "F20", "F10", "G20"],
+    desc: "Embout de biellette de direction, côté gauche ou droit. Un contrôle de la géométrie est conseillé après le montage.",
+    specs: { "Position": "Gauche ou droite", "Filetage": "M14 × 1,5", "Écrou": "Inclus" } },
+  { id: "ressorts", name: "Ressorts de suspension arrière", brand: "Eibach", ref: "BP-33526785968", oem: "33 52 6 785 968", category: "suspension", price: 149.0, stock: 10, popular: 44, models: ["G01", "F25", "F15", "G05"],
+    desc: "Paire de ressorts hélicoïdaux à hauteur d'origine, avec traitement anticorrosion.",
+    specs: { "Position": "Essieu arrière", "Hauteur": "Origine", "Contenu": "2 ressorts" } },
+  { id: "biellette-stabilisatrice", name: "Biellette de barre stabilisatrice", brand: "Meyle", ref: "BP-31306792211", oem: "31 30 6 792 211", category: "suspension", price: 29.9, stock: 40, popular: 55, models: ["F30", "F20", "F10", "E90"],
+    desc: "Biellette renforcée HD avec rotules graissées à vie.",
+    specs: { "Position": "Avant", "Longueur": "285 mm", "Écrous": "Inclus" } },
+
+  // ---------- Éclairage ----------
+  { id: "phare-led", name: "Phare LED avant droit", brand: "Hella", ref: "BP-63117338709", oem: "63 11 7 338 709", category: "eclairage", price: 649.0, oldPrice: 749.0, stock: 3, popular: 48, models: ["F30"],
+    desc: "Projecteur full LED adaptatif avec feux de jour intégrés. Le module de commande est inclus.",
+    specs: { "Côté": "Droit", "Technologie": "Full LED adaptatif", "Module de commande": "Inclus", "Codage": "Nécessaire" } },
+  { id: "feu-arriere", name: "Feu arrière gauche", brand: "Valeo", ref: "BP-63217367481", oem: "63 21 7 367 481", category: "eclairage", price: 179.0, stock: 7, popular: 41, models: ["F20", "F30"],
+    desc: "Bloc optique arrière LED, partie aile, homologué E.",
+    specs: { "Côté": "Gauche", "Partie": "Aile", "Technologie": "LED" } },
+  { id: "ampoule-xenon", name: "Ampoule xénon D1S", brand: "Osram", ref: "BP-63217217509", oem: "63 21 7 217 509", category: "eclairage", price: 69.9, stock: 30, popular: 62, models: ["E90", "E87", "F10", "F25", "F15"],
+    desc: "Ampoule xénon D1S 4 300 K avec une durée de vie de 3 000 heures.",
+    specs: { "Culot": "D1S", "Température": "4 300 K", "Puissance": "35 W", "Durée de vie": "3 000 h" } },
+  { id: "antibrouillard", name: "Projecteur antibrouillard", brand: "Hella", ref: "BP-63177839865", oem: "63 17 7 839 865", category: "eclairage", price: 54.9, stock: 16, popular: 38, models: ["E90", "F25", "F15", "E87"],
+    desc: "Projecteur antibrouillard avant, gauche ou droit, livré avec son ampoule H11.",
+    specs: { "Côté": "Gauche ou droit", "Ampoule": "H11 incluse" } },
+
+  // ---------- Carrosserie ----------
+  { id: "calandre", name: "Calandre noir brillant (paire)", brand: "Bavaria Parts", ref: "BP-51137294517", oem: "51 13 7 294 517", category: "carrosserie", price: 59.0, oldPrice: 79.0, stock: 40, popular: 88, models: ["F30", "F20"],
+    desc: "Paire de calandres noir brillant à clipser, sans perçage.",
+    specs: { "Finition": "Noir brillant", "Matériau": "ABS traité UV", "Montage": "Clipsage" } },
+  { id: "coques-retro", name: "Coques de rétroviseur carbone", brand: "Bavaria Parts", ref: "BP-51167345413", oem: "51 16 7 345 413", category: "carrosserie", price: 119.0, stock: 12, popular: 55, models: ["F30", "F20", "F10"],
+    desc: "Paire de coques en fibre de carbone véritable, avec vernis anti-UV. Elles remplacent les coques d'origine.",
+    specs: { "Matériau": "Carbone 3K", "Finition": "Vernis brillant", "Contenu": "Gauche et droite" } },
+  { id: "bouclier-avant", name: "Bouclier avant (à peindre)", brand: "Van Wezel", ref: "BP-51117293026", oem: "51 11 7 293 026", category: "carrosserie", price: 289.0, stock: 0, popular: 30, models: ["G20"],
+    desc: "Pare-chocs avant apprêté, prêt à peindre, avec emplacements pour les capteurs de stationnement.",
+    specs: { "État": "Apprêté, à peindre", "Capteurs de stationnement": "Emplacements prévus", "Lave-phares": "Non" } },
+
+  // ---------- Entretien ----------
+  { id: "huile-5w30", name: "Huile moteur 5W30 LL-04 (5 L)", brand: "Castrol", ref: "BP-83212365946", oem: "83 21 2 365 946", category: "entretien", price: 54.9, stock: 80, popular: 97, models: ALL,
+    desc: "Huile synthétique homologuée Longlife-04, compatible avec les filtres à particules.",
+    specs: { "Viscosité": "5W30", "Homologation": "Longlife-04", "Contenance": "5 L" } },
+  { id: "liquide-refroidissement", name: "Liquide de refroidissement (1,5 L)", brand: "Bavaria Parts", ref: "BP-83192211191", oem: "83 19 2 211 191", category: "entretien", price: 19.9, stock: 55, popular: 60, models: ALL,
+    desc: "Antigel concentré bleu, protège jusqu'à -37 °C une fois dilué à 50 %.",
+    specs: { "Couleur": "Bleu", "Protection": "-37 °C (dilué à 50 %)", "Contenance": "1,5 L" } },
+  { id: "filtre-habitacle", name: "Filtre d'habitacle à charbon", brand: "Mann-Filter", ref: "BP-64119237555", oem: "64 11 9 237 555", category: "entretien", price: 29.9, stock: 38, popular: 80, models: ["F30", "F20", "F10", "G20", "G30"],
+    desc: "Filtre à charbon actif qui retient pollens, odeurs et particules fines.",
+    specs: { "Type": "Charbon actif", "Contenu": "2 filtres" } },
+  { id: "balais-essuie-glace", name: "Balais d'essuie-glace (paire)", brand: "Bosch", ref: "BP-61610042657", oem: "61 61 0 042 657", category: "entretien", price: 34.9, stock: 50, popular: 74, models: ["F30", "F20", "F48", "G01", "G20"],
+    desc: "Balais plats Aerotwin, silencieux et sans traces.",
+    specs: { "Longueurs": "600 + 475 mm", "Type": "Plat", "Contenu": "2 balais" } },
+  { id: "batterie-agm", name: "Batterie AGM 90 Ah", brand: "Varta", ref: "BP-61217555719", oem: "61 21 7 555 719", category: "entretien", price: 229.0, stock: 9, popular: 68, models: ["F10", "F25", "F15", "G30", "G01", "G05"],
+    desc: "Batterie AGM Start-Stop 90 Ah / 900 A. La déclaration de la nouvelle batterie au véhicule (codage) est recommandée après le montage.",
+    specs: { "Technologie": "AGM Start-Stop", "Capacité": "90 Ah", "Courant de démarrage": "900 A", "Dimensions": "353 × 175 × 190 mm" } },
+];

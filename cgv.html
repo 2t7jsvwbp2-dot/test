@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conditions générales de vente · Bavaria Parts</title>
+  <meta name="description" content="Conditions générales de vente de Bavaria Parts.">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="cgv">
+  <main id="main" class="container page page--narrow">
+    <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>Conditions générales de vente</span></nav>
+
+    <h1>Conditions générales de vente</h1>
+    <p class="notice">Modèle de CGV à faire relire et adapter à votre situation avant la mise en ligne.</p>
+    <div class="prose">
+      <h2>1. Objet</h2>
+      <p>Les présentes conditions régissent les ventes de pièces détachées automobiles réalisées sur ce site par <span data-shop="legalName"></span> (<span data-shop="legalForm"></span>, SIRET <span data-shop="siret"></span>), ci-après « le vendeur », auprès de clients consommateurs ou professionnels.</p>
+      <h2>2. Produits</h2>
+      <p>Les pièces sont décrites avec leurs caractéristiques essentielles et la liste des véhicules compatibles. Les illustrations ne sont pas contractuelles. Le client est invité à vérifier la compatibilité ou à communiquer son numéro VIN ; le vendeur ne peut être tenu responsable d'une incompatibilité résultant d'informations erronées fournies par le client.</p>
+      <h2>3. Prix</h2>
+      <p>Les prix sont indiqués en euros toutes taxes comprises, hors frais de livraison, lesquels sont indiqués avant la validation de la commande. <span data-shop="vatNumber"></span></p>
+      <h2>4. Commande</h2>
+      <p>La commande est enregistrée après validation du formulaire et acceptation des présentes CGV. Un numéro de commande est attribué. La vente est définitive à réception du paiement intégral.</p>
+      <h2>5. Paiement</h2>
+      <p>Le paiement s'effectue par Revolut ou par virement bancaire, en indiquant le numéro de commande comme référence. Le paiement doit être reçu dans un délai de <span id="cgvDeadline"></span> jours ; à défaut, la commande est annulée. Aucune donnée bancaire n'est collectée sur le site.</p>
+      <h2>6. Livraison</h2>
+      <p>Les commandes sont expédiées sous 24h ouvrées après réception du paiement, à l'adresse indiquée par le client. Les délais de transport sont donnés à titre indicatif. Le transfert des risques intervient à la remise du colis au client.</p>
+      <h2>7. Droit de rétractation</h2>
+      <p>Le client consommateur dispose d'un délai de 14 jours à compter de la réception pour exercer son droit de rétractation, sans motif, en informant le vendeur par e-mail à <span data-shop="email"></span>. Les pièces doivent être retournées non montées, dans leur emballage d'origine. Les frais de retour sont à la charge du client. Le remboursement intervient dans les 14 jours suivant la réception du retour, par le moyen de paiement utilisé.</p>
+      <h2>8. Garanties</h2>
+      <p>Les produits bénéficient de la garantie légale de conformité (articles L217-3 et suivants du Code de la consommation) pendant deux ans et de la garantie des vices cachés (articles 1641 et suivants du Code civil). Le montage doit être réalisé selon les règles de l'art ; un montage défectueux exclut la garantie.</p>
+      <h2>9. Données personnelles</h2>
+      <p>Les données collectées servent uniquement au traitement des commandes. Voir la <a href="confidentialite.html">politique de confidentialité</a>.</p>
+      <h2>10. Litiges</h2>
+      <p>Les présentes CGV sont soumises au droit français. En cas de litige, une solution amiable sera recherchée avant toute action. Le client consommateur peut recourir gratuitement au médiateur de la consommation indiqué dans les <a href="mentions-legales.html">mentions légales</a>.</p>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script>$("#cgvDeadline").textContent = SHOP.payment.deadlineDays;</script>
+</body>
+</html>

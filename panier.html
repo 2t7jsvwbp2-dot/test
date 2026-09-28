@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panier · Bavaria Parts</title>
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="panier">
+  <main id="main" class="container page">
+    <ol class="progress" aria-label="Étapes de la commande">
+      <li class="is-current">Panier</li><li>Coordonnées et paiement</li><li>Confirmation</li>
+    </ol>
+    <h1>Votre panier</h1>
+    <div class="cart-layout" id="cartLayout">
+      <div class="cart-list" id="cartList"></div>
+      <aside class="summary" id="summary">
+        <h2>Récapitulatif</h2>
+        <form class="promo" id="promoForm">
+          <label for="promoInput">Code promo</label>
+          <div class="promo__row">
+            <input id="promoInput" autocomplete="off" placeholder="ex. BIENVENUE10">
+            <button class="btn btn--ghost" type="submit">Appliquer</button>
+          </div>
+          <p class="small" id="promoMsg" role="status"></p>
+        </form>
+        <dl class="totals" id="totals"></dl>
+        <p class="small muted" id="freeHint"></p>
+        <a class="btn btn--primary btn--lg btn--block" href="commande.html" id="toCheckout">Passer commande</a>
+        <p class="small muted center">Paiement par Revolut ou virement à l'étape suivante.</p>
+      </aside>
+    </div>
+    <div class="empty" id="cartEmpty" hidden>
+      <h2>Votre panier est vide</h2>
+      <p>Parcourez le catalogue ou indiquez votre modèle pour trouver les pièces compatibles.</p>
+      <a class="btn btn--primary" href="catalogue.html">Voir le catalogue</a>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>

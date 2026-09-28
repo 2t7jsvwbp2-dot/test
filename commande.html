@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Commande · Bavaria Parts</title>
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="commande">
+  <main id="main" class="container page">
+    <ol class="progress" aria-label="Étapes de la commande">
+      <li class="is-done"><a href="panier.html">Panier</a></li><li class="is-current">Coordonnées et paiement</li><li>Confirmation</li>
+    </ol>
+    <h1>Finaliser la commande</h1>
+
+    <div class="empty" id="checkoutEmpty" hidden>
+      <h2>Votre panier est vide</h2>
+      <a class="btn btn--primary" href="catalogue.html">Voir le catalogue</a>
+    </div>
+
+    <form class="checkout" id="checkoutForm" novalidate>
+      <div class="checkout__main">
+        <section class="panel">
+          <h2><span class="panel__num">1</span> Vos coordonnées</h2>
+          <div class="form-grid">
+            <div class="field"><label for="firstname">Prénom</label><input id="firstname" name="firstname" required autocomplete="given-name" data-error="Indiquez votre prénom."></div>
+            <div class="field"><label for="lastname">Nom</label><input id="lastname" name="lastname" required autocomplete="family-name" data-error="Indiquez votre nom."></div>
+            <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" required autocomplete="email" data-error="Indiquez une adresse e-mail valide, ex. nom@exemple.fr."></div>
+            <div class="field"><label for="phone">Téléphone</label><input id="phone" name="phone" type="tel" required autocomplete="tel" pattern="[0-9+ .\(\)\-]{10,20}" data-error="Indiquez un numéro de téléphone, ex. 06 12 34 56 78."></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2><span class="panel__num">2</span> Livraison</h2>
+          <div class="options" id="shippingOptions"></div>
+          <div class="form-grid" id="addressFields">
+            <div class="field span-2"><label for="address">Adresse</label><input id="address" name="address" required autocomplete="address-line1" data-error="Indiquez l'adresse de livraison."></div>
+            <div class="field span-2"><label for="address2">Complément d'adresse <span class="muted">(facultatif)</span></label><input id="address2" name="address2" autocomplete="address-line2"></div>
+            <div class="field"><label for="zip">Code postal</label><input id="zip" name="zip" required pattern="[0-9]{5}" inputmode="numeric" autocomplete="postal-code" data-error="Le code postal doit contenir 5 chiffres."></div>
+            <div class="field"><label for="city">Ville</label><input id="city" name="city" required autocomplete="address-level2" data-error="Indiquez la ville."></div>
+          </div>
+          <p class="small muted" id="pickupInfo" hidden>Retrait à l'adresse : <span data-shop="address"></span>. Nous vous prévenons par e-mail quand la commande est prête.</p>
+        </section>
+
+        <section class="panel">
+          <h2><span class="panel__num">3</span> Paiement</h2>
+          <div class="options" id="paymentOptions"></div>
+          <p class="small muted">Vous recevrez les instructions de paiement à l'écran après validation. Votre commande est expédiée dès réception du paiement.</p>
+        </section>
+
+        <section class="panel">
+          <h2><span class="panel__num">4</span> Informations complémentaires</h2>
+          <div class="form-grid">
+            <div class="field"><label for="vin">N° VIN <span class="muted">(facultatif)</span></label><input id="vin" name="vin" maxlength="17" pattern="[A-HJ-NPR-Za-hj-npr-z0-9]{7}|[A-HJ-NPR-Za-hj-npr-z0-9]{17}" autocomplete="off" placeholder="7 ou 17 caractères" data-error="Le VIN comporte 7 ou 17 caractères (lettres I, O et Q exclues)."></div>
+            <div class="field span-2"><label for="note">Message pour la commande <span class="muted">(facultatif)</span></label><textarea id="note" name="note" rows="3" placeholder="Motorisation, options, précisions de livraison…"></textarea></div>
+          </div>
+          <p class="small muted">Avec votre VIN, nous vérifions gratuitement la compatibilité avant l'expédition.</p>
+        </section>
+      </div>
+
+      <aside class="summary summary--sticky">
+        <h2>Votre commande</h2>
+        <ul class="mini-cart" id="miniCart"></ul>
+        <dl class="totals" id="totals"></dl>
+        <div class="field">
+          <label class="check"><input type="checkbox" id="cgv" required data-error="Vous devez accepter les conditions générales de vente."> <span>J'ai lu et j'accepte les <a href="cgv.html" target="_blank" rel="noopener">conditions générales de vente</a>.</span></label>
+        </div>
+        <button class="btn btn--primary btn--lg btn--block" type="submit" id="submitBtn">Valider la commande</button>
+        <p class="small muted center">Aucun paiement n'est prélevé sur ce site. Vous payez ensuite par Revolut ou virement.</p>
+      </aside>
+    </form>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
