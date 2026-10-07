@@ -3,48 +3,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Catalogue · Bavaria Parts</title>
-  <meta name="description" content="Toutes les pièces détachées pour BMW : filtrez par modèle, catégorie, marque et prix.">
+  <title>Boutique · Bois & Braise</title>
+  <meta name="description" content="Bois de chauffage au stère, palettes, sacs, bûches densifiées, granulés et accessoires. Filtrez par essence, longueur et séchage.">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="catalogue">
   <main id="main" class="container page">
-    <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span id="crumb">Catalogue</span></nav>
+    <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span id="crumb">Boutique</span></nav>
     <div class="page__head">
-      <h1 id="catalogTitle">Catalogue</h1>
-      <p class="muted" id="resultCount"></p>
+      <h1 id="catalogTitle">Boutique</h1>
+      <p class="muted" id="resultCount" aria-live="polite"></p>
     </div>
+
+    <div class="cat-tabs" id="catTabs" role="tablist" aria-label="Catégories"></div>
 
     <div class="catalog">
       <details class="filters" id="filtersPanel" open>
         <summary>Filtres</summary>
         <form id="filters" class="filters__form">
           <div class="filter-group">
-            <label for="fModel" class="filter-group__title">Modèle</label>
-            <select id="fModel" name="modele"><option value="">Tous les modèles</option></select>
+            <label for="fSearch" class="filter-group__title">Rechercher</label>
+            <input type="search" id="fSearch" name="q" placeholder="chêne, granulés, 25 cm…">
           </div>
           <fieldset class="filter-group">
-            <legend class="filter-group__title">Catégorie</legend>
-            <label class="check"><input type="radio" name="categorie" value="" checked> Toutes</label>
-            <div id="fCategories"></div>
+            <legend class="filter-group__title">Essence</legend>
+            <div id="fEssences"></div>
           </fieldset>
           <fieldset class="filter-group">
-            <legend class="filter-group__title">Marque</legend>
-            <div id="fBrands"></div>
+            <legend class="filter-group__title">Longueur disponible</legend>
+            <div class="seg seg--sm" id="fLengths"></div>
+          </fieldset>
+          <fieldset class="filter-group">
+            <legend class="filter-group__title">Séchage</legend>
+            <label class="check"><input type="checkbox" name="four" id="fFour"> Disponible séché au four (&lt; 15 %)</label>
           </fieldset>
           <div class="filter-group">
             <label for="fPrice" class="filter-group__title">Prix maximum : <span id="fPriceValue"></span></label>
-            <input type="range" id="fPrice" name="prix" min="10" max="650" step="10">
+            <input type="range" id="fPrice" name="prix" min="10" max="550" step="10">
           </div>
-          <fieldset class="filter-group">
-            <legend class="filter-group__title">Disponibilité</legend>
-            <label class="check"><input type="checkbox" name="stock" id="fStock"> En stock uniquement</label>
-            <label class="check"><input type="checkbox" name="promo" id="fPromo"> En promotion</label>
-          </fieldset>
           <button type="button" class="btn btn--ghost btn--block" id="resetFilters">Réinitialiser les filtres</button>
         </form>
       </details>
@@ -57,15 +57,15 @@
               <option value="popularite">Popularité</option>
               <option value="prix-asc">Prix croissant</option>
               <option value="prix-desc">Prix décroissant</option>
-              <option value="nom">Nom A → Z</option>
+              <option value="energie">Énergie par euro</option>
             </select>
           </label>
         </div>
         <div class="product-grid product-grid--3" id="productGrid"></div>
         <div class="empty" id="emptyState" hidden>
-          <h2>Aucune pièce ne correspond</h2>
-          <p>Essayez d'élargir vos filtres, ou envoyez-nous la référence recherchée : nous pouvons souvent la commander sous 48h.</p>
-          <p><button class="btn btn--ghost" id="emptyReset">Réinitialiser les filtres</button> <a class="btn btn--primary" href="contact.html">Demander une pièce</a></p>
+          <h2>Aucun produit ne correspond</h2>
+          <p>Élargissez vos filtres, ou demandez-nous : nous avons souvent d'autres essences et longueurs en stock.</p>
+          <p><button class="btn btn--ghost" id="emptyReset">Réinitialiser les filtres</button> <a class="btn btn--primary" href="contact.html">Nous demander</a></p>
         </div>
       </div>
     </div>

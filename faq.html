@@ -3,38 +3,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aide · Bavaria Parts</title>
-  <meta name="description" content="Questions fréquentes : compatibilité, paiement Revolut et virement, livraison, retours.">
+  <title>Questions fréquentes · Bois & Braise</title>
+  <meta name="description" content="Stère, m³ apparent, humidité, livraison, paiement : toutes les réponses sur l'achat de bois de chauffage.">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="faq">
   <main id="main" class="container page page--narrow">
     <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>Aide</span></nav>
     <h1>Questions fréquentes</h1>
-    <section class="faq" id="commande">
-      <h2>Commande</h2>
-      <details><summary>Comment savoir si une pièce est compatible avec ma voiture ?</summary><p>Cliquez sur « Mon véhicule » en haut de la page et choisissez votre modèle : chaque pièce indique alors si elle est compatible. Le code du modèle (E90, F30, G20…) figure sur la carte grise. En cas de doute, indiquez votre numéro VIN lors de la commande : nous vérifions la compatibilité avant l'expédition.</p></details>
-      <details><summary>Puis-je modifier ou annuler ma commande ?</summary><p>Oui, tant qu'elle n'est pas expédiée. Écrivez-nous avec votre numéro de commande. Si vous avez déjà payé, nous vous remboursons sous 14 jours.</p></details>
-      <details><summary>La pièce que je cherche n'est pas au catalogue.</summary><p>Envoyez-nous la référence ou votre VIN par le formulaire de contact. Nous pouvons commander la plupart des pièces sous 48 à 72h.</p></details>
+    <div class="faq-search field">
+      <label for="faqSearch">Rechercher dans l'aide</label>
+      <input type="search" id="faqSearch" placeholder="ex. stère, humidité, chèque…">
+      <p class="small muted" id="faqCount" role="status"></p>
+    </div>
+    <section class="faq" id="bois">
+      <h2>Le bois</h2>
+      <details><summary>Quelle est la différence entre un stère et un m³ ?</summary><p>Un stère est un volume de 1 m × 1 m × 1 m de bûches de 1 m de long, empilées. Quand on recoupe ces bûches plus court, elles se rangent mieux et le tas diminue : 1 stère donne environ 0,8 m³ en 50 cm, 0,7 m³ en 33 cm et 0,6 m³ en 25 cm. On parle de m³ apparent. Nous affichons toujours les deux, pour que vous sachiez exactement ce que vous recevez. <a href="calculateur.html#convertisseur">Essayez le convertisseur</a>.</p></details>
+      <details><summary>Comment savoir si le bois est vraiment sec ?</summary><p>Un bois sec sonne clair quand on cogne deux bûches, présente des fentes aux extrémités et une écorce qui se détache. Le plus fiable reste l'humidimètre : fendez une bûche et mesurez au cœur. En dessous de 20 %, le bois est prêt à brûler. Nos bois séchés au four sont sous 15 %.</p></details>
+      <details><summary>Quelle longueur choisir ?</summary><p>Mesurez la profondeur ou la largeur utile de votre foyer et retirez 5 à 10 cm pour pouvoir manipuler les bûches. La plupart des poêles prennent du 33 cm, les petits poêles et cuisinières du 25 cm, les cheminées et chaudières du 50 cm.</p></details>
+      <details><summary>Séché à l'air ou au four ?</summary><p>Le séchage à l'air (18 à 24 mois sous abri) donne un bois sous 20 % d'humidité, parfait pour le chauffage. Le séchage au four descend sous 15 % : allumage plus rapide, rendement un peu meilleur, aucun insecte, idéal si vous rangez le bois à l'intérieur.</p></details>
+      <details><summary>D'où vient votre bois ?</summary><p>De forêts françaises gérées durablement : coupes d'éclaircie, houppiers et bois d'exploitation, situés à moins de 100 km du dépôt pour la plupart.</p></details>
+    </section>
+    <section class="faq" id="livraison">
+      <h2>Livraison</h2>
+      <details><summary>Comment se passe la livraison en vrac ?</summary><p>Notre camion benne bascule le bois au sol, au plus près de votre abri si l'accès le permet. Le chauffeur vous appelle la veille pour confirmer l'heure. Le rangement n'est pas inclus.</p></details>
+      <details><summary>Je ne suis pas dans vos zones de tournée.</summary><p>Nous livrons toute la France métropolitaine (hors Corse) sur palette, par transporteur. Le prix dépend du nombre de palettes, à raison de 2 stères maximum par palette. <a href="livraison.html">Voir les tarifs</a>.</p></details>
+      <details><summary>Puis-je choisir ma date de livraison ?</summary><p>Oui, parmi les prochaines tournées de votre zone, lors de la commande. Vous choisissez aussi le créneau : matin ou après-midi.</p></details>
+      <details><summary>Dois-je être présent ?</summary><p>Ce n'est pas obligatoire si la commande est payée et le lieu de déchargement bien indiqué. Pour un paiement à la livraison, oui.</p></details>
     </section>
     <section class="faq" id="paiement">
       <h2>Paiement</h2>
-      <details><summary>Quels moyens de paiement acceptez-vous ?</summary><p>Le paiement par Revolut (application ou carte bancaire sur la page Revolut) et le virement bancaire SEPA, classique ou instantané. Aucune donnée de carte n'est saisie sur notre site.</p></details>
-      <details><summary>Comment payer avec Revolut ?</summary><p>Après validation de la commande, cliquez sur « Payer avec Revolut ». Saisissez le montant exact indiqué et ajoutez votre numéro de commande dans la note du paiement.</p></details>
-      <details><summary>Comment payer par virement ?</summary><p>L'IBAN, le BIC et le montant s'affichent après la commande. Indiquez votre numéro de commande dans le libellé du virement : c'est lui qui nous permet d'identifier votre paiement.</p></details>
-      <details><summary>Combien de temps ai-je pour payer ?</summary><p>Votre commande est réservée pendant 7 jours. Sans paiement dans ce délai, elle est annulée et les pièces sont remises en stock.</p></details>
-      <details><summary>J'ai oublié d'indiquer la référence de commande.</summary><p>Pas de souci : écrivez-nous avec le nom du titulaire du compte, la date et le montant du paiement, et nous l'associerons à votre commande.</p></details>
-      <details><summary>Recevrai-je une facture ?</summary><p>Oui, la facture est jointe au colis et envoyée par e-mail au moment de l'expédition.</p></details>
+      <details><summary>Quels moyens de paiement acceptez-vous ?</summary><p>Revolut (application ou carte bancaire sur la page Revolut), virement bancaire, et pour les livraisons par nos camions ou le retrait au dépôt : chèque ou espèces remis au chauffeur. Aucune donnée bancaire n'est saisie sur notre site.</p></details>
+      <details><summary>Acceptez-vous le chèque énergie ?</summary><p>Contactez-nous avant de commander : nous vous indiquerons si nous pouvons l'accepter pour votre commande.</p></details>
+      <details><summary>Quelle TVA s'applique ?</summary><p>Le bois de chauffage vendu aux particuliers bénéficie du taux réduit de TVA de 10 %. Tous nos prix sont affichés TTC.</p></details>
+      <details><summary>Combien de temps ai-je pour payer ?</summary><p>Une commande payable à l'avance est réservée 7 jours, et doit être payée au plus tard la veille de la livraison.</p></details>
     </section>
-    <section class="faq" id="livraison">
-      <h2>Livraison et retours</h2>
-      <details><summary>Quels sont les délais de livraison ?</summary><p>La commande est expédiée sous 24h ouvrées après réception du paiement. Comptez ensuite 2 à 3 jours ouvrés en Colissimo et 24h en Chronopost.</p></details>
-      <details><summary>La livraison est-elle gratuite ?</summary><p>La livraison Colissimo est offerte dès 99 € d'achats, après remise. Le retrait à l'entrepôt est toujours gratuit.</p></details>
-      <details><summary>Comment retourner une pièce ?</summary><p>Vous disposez de 14 jours après réception pour nous retourner une pièce non montée, dans son emballage d'origine. Contactez-nous avant l'envoi. Voir la page Livraison et retours.</p></details>
+    <section class="faq" id="stockage">
+      <h2>Stockage</h2>
+      <details><summary>Comment stocker mon bois ?</summary><p>Sous abri, surélevé du sol et ventilé sur les côtés. Ne bâchez jamais un tas entièrement : l'humidité resterait piégée. Rentrez quelques jours de consommation à l'intérieur avant de les brûler.</p></details>
+      <details><summary>Quelle place prévoir ?</summary><p>Comptez environ 1 m de long de tas par stère en 33 cm, sur 2 m de haut. Le <a href="calculateur.html">calculateur</a> et chaque fiche produit vous donnent la longueur exacte selon votre commande.</p></details>
     </section>
     <p class="panel panel--soft">Vous ne trouvez pas la réponse ? <a href="contact.html">Écrivez-nous</a>, nous répondons en général dans la journée.</p>
   </main>
@@ -42,5 +53,6 @@
   <script src="js/config.js"></script>
   <script src="js/data.js"></script>
   <script src="js/common.js"></script>
+  <script src="js/faq.js"></script>
 </body>
 </html>

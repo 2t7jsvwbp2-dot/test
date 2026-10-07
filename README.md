@@ -1,53 +1,50 @@
-# Bavaria Parts
+# Bois & Braise
 
-Boutique en ligne de pièces détachées pour BMW. Site statique (HTML, CSS, JavaScript), sans serveur ni base de données : il s'héberge gratuitement sur GitHub Pages, Netlify ou Cloudflare Pages.
+Boutique en ligne de bois de chauffage pour la France. Site statique (HTML, CSS, JavaScript), sans serveur ni base de données : il s'héberge gratuitement sur GitHub Pages, Netlify ou Cloudflare Pages.
 
 ## Ce que contient le site
 
 | Page | Rôle |
 |---|---|
-| `index.html` | Accueil : recherche par véhicule, catégories, meilleures ventes, étapes de commande |
-| `catalogue.html` | Catalogue avec recherche, filtres (modèle, catégorie, marque, prix, stock, promo) et tri |
-| `produit.html?id=…` | Fiche produit : caractéristiques, compatibilité, livraison, produits associés |
-| `panier.html` | Panier avec code promo et calcul de la livraison |
-| `commande.html` | Coordonnées, mode de livraison, choix du paiement (Revolut ou virement) |
-| `confirmation.html` | Numéro de commande et instructions de paiement avec boutons « Copier » |
-| `mes-commandes.html` | Historique des commandes passées depuis le navigateur |
-| `contact.html`, `faq.html`, `livraison-retours.html`, `a-propos.html` | Pages d'aide |
-| `cgv.html`, `mentions-legales.html`, `confidentialite.html` | Pages légales (remplies depuis la configuration) |
+| `index.html` | Accueil : commande express (essence, longueur, séchage, quantité, prix en direct), test de livraison par code postal, stock de la saison, mini-calculateur, sélecteur d'essence |
+| `catalogue.html` | Boutique avec catégories, recherche, filtres (essence, longueur, séchage, prix) et tri, y compris « énergie par euro » |
+| `produit.html?id=…` | Configurateur : essence, longueur, séchage, nombre de stères ; prix au stère et au m³ apparent, poids, énergie, visualisation du volume et de la place à prévoir, prix de livraison pour votre code postal |
+| `calculateur.html` | Besoin annuel en stères (surface, isolation, climat déduit du code postal, appareil, usage), comparaison du coût avec l'électricité, le fioul, le gaz et les granulés, effet de l'humidité, convertisseur stère ↔ m³ apparent |
+| `essences.html` | Questionnaire « quelle essence pour moi ? », tableau comparatif triable, fiches essences |
+| `livraison.html` | Zones et tarifs, test par code postal, calendrier des prochaines tournées, conditions d'accès |
+| `panier.html`, `commande.html` | Panier avec code promo et livraison calculée selon le code postal et le volume ; choix du mode, de la date et du créneau de livraison ; paiement |
+| `confirmation.html`, `mes-commandes.html` | Instructions de paiement (Revolut, virement ou à la livraison) et historique |
+| `faq.html` (avec recherche), `contact.html`, `a-propos.html` | Aide |
+| `cgv.html`, `mentions-legales.html`, `confidentialite.html` | Pages légales, remplies depuis la configuration |
 
-Autres fonctions : « Mon véhicule » (les pièces compatibles sont signalées partout), panier enregistré dans le navigateur, livraison offerte dès 99 €, illustrations de toutes les pièces.
+Les illustrations (tas de bûches, sacs, palettes) sont dessinées en SVG par `js/common.js` : leur couleur suit l'essence choisie.
 
 ## Avant la mise en ligne : `js/config.js`
 
-Tout se règle dans **`js/config.js`**. Tant qu'un champ est vide, le site affiche « [à compléter] » à sa place.
+Tout se règle dans **`js/config.js`**. Tant qu'un champ est vide, le site affiche « [à compléter] ».
 
-1. **Identité légale** : `legalName`, `legalForm`, `siret`, `vatNumber`, `director`, `address`, `email`, `phone`. Ces informations sont obligatoires pour vendre en ligne en France.
-2. **Revolut** : dans l'application Revolut, ouvrez votre profil puis « Revolut.me » pour obtenir votre lien. Indiquez-le dans `payment.revolut.link` (ex. `https://revolut.me/votre-pseudo`) et votre pseudo dans `payment.revolut.tag`. Avec un compte Revolut Business, vous pouvez aussi mettre un lien de paiement.
-3. **Virement** : `payment.transfer.holder`, `iban`, `bic`, `bank`.
-4. **Réception des commandes** : créez un formulaire gratuit sur [formspree.io](https://formspree.io), puis collez son adresse dans `formEndpoint` (ex. `https://formspree.io/f/abcdwxyz`). Chaque commande et chaque message de contact vous sera envoyé par e-mail. Sans cela, c'est le client qui doit vous envoyer lui-même le récapitulatif par e-mail.
-5. **Codes promo, frais de livraison, délai de paiement** : section `promoCodes`, `shipping`, `payment.deadlineDays`.
+1. **Identité légale** : `legalName`, `legalForm`, `siret`, `vatNumber`, `director`, `address`, `email`, `phone`, `depotLabel`.
+2. **Zones de livraison** : `delivery.zones` liste, pour chaque zone, les départements desservis, le prix, le volume à partir duquel la livraison est offerte, les jours de tournée (1 = lundi … 6 = samedi) et le délai minimum. Adaptez-les à l'emplacement de votre dépôt. Hors zone, le site propose le transporteur sur palette (`delivery.carrier`) ; les petits colis seuls partent en Colissimo (`delivery.parcel`).
+3. **Paiement** : lien et pseudo Revolut (`payment.revolut`), coordonnées bancaires (`payment.transfer`), paiement au chauffeur (`payment.onDelivery`).
+4. **Réception des commandes** : créez un formulaire gratuit sur [formspree.io](https://formspree.io) et collez son adresse dans `formEndpoint`. Sans cela, le client doit vous envoyer lui-même le récapitulatif par e-mail.
+5. **Stock de la saison** (`season`), **codes promo** (`promoCodes`), **TVA** (`vatRate`, 10 % pour le bois de chauffage vendu aux particuliers).
 
-Pensez aussi à compléter le médiateur de la consommation dans `mentions-legales.html` et à faire relire `cgv.html`.
+Complétez aussi le médiateur de la consommation dans `mentions-legales.html` et faites relire `cgv.html`.
+
+## Prix et produits : `js/data.js`
+
+- `ESSENCES` : pouvoir calorifique, masse, notes (flamme, braises, allumage) et couleurs des illustrations.
+- `LENGTHS` : supplément de coupe par stère et facteur de conversion en m³ apparent.
+- `DRYINGS` : supplément pour le séchage au four.
+- `PRODUCTS` : les bûches au stère (prix de base pour du 1 m séché à l'air) et les produits à prix fixe (palettes, sacs, densifié, granulés, accessoires).
+- `ENERGIES` : prix du kWh utile des autres énergies, pour le comparateur. À mettre à jour chaque saison.
 
 ## Comment se passe une commande
 
-1. Le client valide son panier : un numéro de commande est créé (ex. `BP260928-X7K2`).
-2. La commande vous est envoyée par e-mail (via Formspree).
-3. Le client voit le montant, votre lien Revolut ou votre IBAN, et la référence à indiquer.
-4. Vous vérifiez la réception du paiement sur votre compte, puis vous expédiez.
-
-Le site n'a pas de base de données : le stock ne se met pas à jour tout seul. Modifiez `stock` dans `js/data.js` quand une pièce est épuisée.
-
-## Ajouter ou modifier des pièces
-
-Le catalogue est dans **`js/data.js`**. Chaque pièce a un identifiant (`id`), qui est aussi le nom de son image dans `images/products/`.
-
-Les illustrations sont générées par `tools/generate_images.py`. Pour une nouvelle pièce, ajoutez un dessin dans ce script ou déposez votre propre image (SVG, ou modifiez `imgSrc` dans `js/common.js` pour utiliser des photos `.jpg`).
-
-```bash
-python3 tools/generate_images.py
-```
+1. Le client compose son panier, saisit son code postal et choisit une date de tournée.
+2. La commande vous est envoyée par e-mail (via Formspree), avec l'adresse, le lieu de déchargement et l'accès camion.
+3. Le client paie par Revolut ou virement avec le numéro de commande en référence, ou au chauffeur.
+4. Vous livrez à la date choisie.
 
 ## Tester en local
 
@@ -58,8 +55,4 @@ python3 -m http.server 8000
 
 ## Publier sur GitHub Pages
 
-Dans le dépôt GitHub : **Settings → Pages → Deploy from a branch**, choisissez la branche et le dossier `/ (root)`. Le site est en ligne après une minute environ.
-
----
-
-BMW est une marque déposée de BMW AG. Bavaria Parts est un revendeur indépendant, non affilié à BMW AG.
+Dans le dépôt GitHub : **Settings → Pages → Deploy from a branch**, choisissez la branche et le dossier `/ (root)`.

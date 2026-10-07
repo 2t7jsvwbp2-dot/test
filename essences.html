@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guide des essences de bois de chauffage · Bois & Braise</title>
+  <meta name="description" content="Chêne, hêtre, charme, frêne, bouleau : comparez pouvoir calorifique, flamme, braises et facilité d'allumage, et trouvez l'essence adaptée à votre foyer.">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="essences">
+  <main id="main" class="container page">
+    <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>Guide des essences</span></nav>
+    <h1>Quelle essence choisir ?</h1>
+    <p class="lead">Tous nos bois sont des feuillus durs, secs et sans résine. Ils ne brûlent pourtant pas de la même façon : certains font de belles flammes, d'autres des braises qui tiennent toute la nuit.</p>
+
+    <section class="finder panel" aria-labelledby="finderTitle">
+      <h2 id="finderTitle" class="h3">Trouvez votre essence en 3 questions</h2>
+      <form id="finder" class="finder__grid">
+        <fieldset class="opt-group">
+          <legend>1. Votre appareil</legend>
+          <div class="seg seg--wrap" data-q="appareil">
+            <button type="button" class="seg__btn" data-v="poele" aria-pressed="false">Poêle ou insert</button>
+            <button type="button" class="seg__btn" data-v="cheminee" aria-pressed="false">Cheminée ouverte</button>
+            <button type="button" class="seg__btn" data-v="chaudiere" aria-pressed="false">Chaudière</button>
+          </div>
+        </fieldset>
+        <fieldset class="opt-group">
+          <legend>2. L'usage</legend>
+          <div class="seg seg--wrap" data-q="usage">
+            <button type="button" class="seg__btn" data-v="principal" aria-pressed="false">Chauffage principal</button>
+            <button type="button" class="seg__btn" data-v="soirees" aria-pressed="false">Soirées et week-ends</button>
+          </div>
+        </fieldset>
+        <fieldset class="opt-group">
+          <legend>3. Le plus important pour vous</legend>
+          <div class="seg seg--wrap" data-q="priorite">
+            <button type="button" class="seg__btn" data-v="duree" aria-pressed="false">Tenir toute la nuit</button>
+            <button type="button" class="seg__btn" data-v="flamme" aria-pressed="false">Une belle flamme</button>
+            <button type="button" class="seg__btn" data-v="prix" aria-pressed="false">Le meilleur prix</button>
+            <button type="button" class="seg__btn" data-v="allumage" aria-pressed="false">Allumer facilement</button>
+          </div>
+        </fieldset>
+      </form>
+      <div id="finderResult" class="finder__result" aria-live="polite"></div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section__head">
+        <h2>Comparatif</h2>
+        <p class="small muted">Cliquez sur un en-tête pour trier.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="table table--compare" id="compare"></table>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="ess-grid" id="essGrid"></div>
+    </section>
+
+    <section class="panel panel--soft prose">
+      <h2 class="h3">Et les résineux ?</h2>
+      <p>Pin, sapin et épicéa s'enflamment vite mais brûlent en quelques minutes et encrassent les conduits par leur résine. Nous les réservons au <a href="produit.html?id=allumage">bois d'allumage</a>, où ils sont parfaits.</p>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/essences.js"></script>
+</body>
+</html>

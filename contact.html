@@ -3,35 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Contact · Bavaria Parts</title>
-  <meta name="description" content="Contactez Bavaria Parts pour trouver une pièce ou suivre une commande.">
+  <title>Contact · Bois & Braise</title>
+  <meta name="description" content="Une question sur le bois, une livraison ou une commande ? Contactez-nous.">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="contact">
   <main id="main" class="container page">
     <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>Contact</span></nav>
-
     <h1>Nous contacter</h1>
     <div class="contact-grid">
       <form class="panel" id="contactForm" novalidate>
         <div class="form-grid">
           <div class="field"><label for="cName">Nom</label><input id="cName" name="name" required autocomplete="name" data-error="Indiquez votre nom."></div>
           <div class="field"><label for="cEmail">E-mail</label><input id="cEmail" name="email" type="email" required autocomplete="email" data-error="Indiquez une adresse e-mail valide."></div>
+          <div class="field"><label for="cPhone">Téléphone <span class="muted">(facultatif)</span></label><input id="cPhone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="cZip">Code postal <span class="muted">(facultatif)</span></label><input id="cZip" name="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code"></div>
           <div class="field span-2"><label for="cSubject">Sujet</label>
             <select id="cSubject" name="subject">
-              <option>Trouver une pièce pour mon véhicule</option>
+              <option>Demande de devis (gros volume, professionnel)</option>
+              <option>Question sur le bois</option>
+              <option>Livraison</option>
               <option>Question sur une commande</option>
-              <option>Paiement</option>
-              <option>Retour ou échange</option>
+              <option>Paiement, chèque énergie</option>
               <option>Autre demande</option>
             </select>
           </div>
-          <div class="field"><label for="cVin">N° VIN <span class="muted">(facultatif)</span></label><input id="cVin" name="vin" maxlength="17" autocomplete="off" placeholder="7 ou 17 caractères"></div>
-          <div class="field"><label for="cOrder">N° de commande ou référence <span class="muted">(facultatif)</span></label><input id="cOrder" name="ref" autocomplete="off"></div>
+          <div class="field span-2"><label for="cOrder">N° de commande <span class="muted">(facultatif)</span></label><input id="cOrder" name="ref" autocomplete="off"></div>
           <div class="field span-2"><label for="cMessage">Message</label><textarea id="cMessage" name="message" rows="6" required data-error="Écrivez votre message."></textarea></div>
         </div>
         <button class="btn btn--primary btn--lg" type="submit">Envoyer le message</button>
@@ -42,11 +43,11 @@
         <dl class="info-list">
           <div><dt>E-mail</dt><dd class="selectable" data-shop="email"></dd></div>
           <div><dt>Téléphone</dt><dd class="selectable" data-shop="phone"></dd></div>
-          <div><dt>Adresse</dt><dd data-shop="address"></dd></div>
+          <div><dt>Dépôt</dt><dd data-shop="address"></dd></div>
           <div><dt>Horaires</dt><dd data-shop="hours"></dd></div>
         </dl>
-        <h2 class="h3">Trouver la bonne pièce</h2>
-        <p class="small">Envoyez-nous votre numéro VIN (case E de la carte grise). Nous vous répondons avec la référence exacte, en général dans la journée.</p>
+        <h2 class="h3">Gros volumes</h2>
+        <p class="small">Au-delà de 15 stères, pour une collectivité, un gîte ou un restaurant, demandez-nous un devis : tarif dégressif et livraison en semi-remorque possible.</p>
       </aside>
     </div>
   </main>

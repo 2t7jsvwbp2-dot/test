@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Livraison du bois de chauffage · Bois & Braise</title>
+  <meta name="description" content="Zones de livraison, tarifs, dates de tournée et conditions d'accès pour la livraison de bois de chauffage. Palettes par transporteur dans toute la France.">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="livraison">
+  <main id="main" class="container page">
+    <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>Livraison</span></nav>
+    <h1>Livraison</h1>
+    <p class="lead">Nos camions livrent le bois en vrac à jour fixe dans un rayon d'environ 130 km autour de <span data-shop="depotLabel"></span>. Au-delà, nous l'expédions sur palette filmée dans toute la France métropolitaine.</p>
+
+    <section class="delivery-check panel">
+      <form id="dCp" class="cp-check cp-check--light">
+        <label for="dCpInput">Votre code postal</label>
+        <div class="cp-check__row">
+          <input id="dCpInput" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="ex. 41000">
+          <button class="btn btn--primary" type="submit">Voir ma livraison</button>
+        </div>
+      </form>
+      <div id="dResult" class="cp-result" role="status"></div>
+    </section>
+
+    <section class="section section--tight">
+      <h2>Tarifs par zone</h2>
+      <div class="zone-grid" id="zoneGrid"></div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="section__head"><h2>Prochaines tournées</h2><p class="small muted">Deux semaines à venir</p></div>
+      <div class="table-wrap"><table class="table cal" id="calendar"></table></div>
+    </section>
+
+    <section class="section section--tight prose">
+      <h2>Bien préparer la livraison</h2>
+      <ul>
+        <li><strong>Accès :</strong> notre camion benne mesure 2,5 m de large et 3,2 m de haut, pour 3,5 t en charge. Prévenez-nous d'un chemin étroit, d'une pente ou d'un terrain meuble.</li>
+        <li><strong>Déchargement :</strong> le bois en vrac est basculé au sol, au plus près de votre abri si l'accès le permet. Prévoyez une zone propre et plane.</li>
+        <li><strong>Présence :</strong> elle n'est pas obligatoire si le paiement est déjà fait et le lieu de déchargement clairement indiqué.</li>
+        <li><strong>Palettes :</strong> livrées par hayon en bordure de propriété, sur rendez-vous fixé par le transporteur. Pas de consigne sur les palettes.</li>
+        <li><strong>Contrôle :</strong> vous pouvez mesurer l'humidité devant le chauffeur. Si le bois dépasse 20 %, refusez la livraison : elle ne vous sera pas facturée.</li>
+      </ul>
+    </section>
+
+    <section class="section section--tight prose">
+      <h2>Retours et réclamations</h2>
+      <p>Pour les produits livrés en colis (allume-feu, accessoires), vous disposez de 14 jours après réception pour exercer votre droit de rétractation. Le bois livré en vrac, une fois déchargé et mélangé à votre stock, ne peut pas être repris : vérifiez-le à la livraison. En cas de souci de volume ou de qualité, <a href="contact.html">écrivez-nous</a> sous 48h avec une photo.</p>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/livraison.js"></script>
+</body>
+</html>

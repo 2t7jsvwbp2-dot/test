@@ -1,155 +1,234 @@
 (() => {
-  const p = productById(params.get("id"));
   const root = $("#product");
-
+  let p = productById(params.get("id"));
   if (!p) {
-    root.innerHTML = `<div class="empty">
-      <h1>Pièce introuvable</h1>
-      <p>Cette pièce n'existe pas ou n'est plus au catalogue.</p>
-      <a class="btn btn--primary" href="catalogue.html">Retour au catalogue</a>
-    </div>`;
+    root.innerHTML = `<div class="empty"><h1>Produit introuvable</h1><p>Ce produit n'existe pas ou n'est plus proposé.</p><a class="btn btn--primary" href="catalogue.html">Voir la boutique</a></div>`;
     return;
   }
 
-  const cat = categoryById(p.category);
-  document.title = `${p.name} · ${SHOP.name}`;
-  const discount = p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+  const state = { ...defaultOpts(p), qty: p.unit === "stère" ? 4 : 1, height: 1.5 };
+  const configs = PRODUCTS.filter((x) => x.type === "config");
 
-  // Date d'expédition estimée : jour ouvré suivant
-  const ship = new Date();
-  do ship.setDate(ship.getDate() + 1); while (ship.getDay() === 0 || ship.getDay() === 6);
-  const shipDate = ship.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
-
-  function compatHtml() {
-    const v = Garage.get();
-    if (!v) {
-      return `<div class="compat compat--unknown">
-        <strong>Est-ce compatible avec ma voiture ?</strong>
-        <span>Indiquez votre modèle pour le vérifier.</span>
-        <button class="btn btn--ghost btn--sm" type="button" data-open-garage>Choisir mon véhicule</button>
-      </div>`;
-    }
-    return p.models.includes(v.code)
-      ? `<div class="compat compat--yes"><strong>✓ Compatible avec votre ${escapeHtml(v.name)}</strong><span>Selon les données constructeur. En cas de doute, vérifiez avec votre VIN.</span></div>`
-      : `<div class="compat compat--no"><strong>✕ Non compatible avec votre ${escapeHtml(v.name)}</strong><span><a href="catalogue.html?modele=${v.code}&categorie=${p.category}">Voir les pièces ${escapeHtml(cat.name.toLowerCase())} pour votre ${escapeHtml(v.code)}</a></span></div>`;
+  // Panier hypothétique : le panier actuel + la sélection, pour estimer la livraison réelle
+  function deliveryHint() {
+    const cp = store.get("cp", "");
+    if (!deptOf(cp)) return `<p class="small"><button type="button" class="link" data-open-cp>Indiquez votre code postal</button> pour voir le prix et les dates de livraison.</p>`;
+    const opts = { len: state.len, dry: state.dry };
+    const extra = { product: p, opts, unit: unitPrice(p, opts), qty: state.qty, line: unitPrice(p, opts) * state.qty, st: p.st * state.qty };
+    const d = deliveryOptions(cp, [...Cart.items().filter((i) => i.key !== itemKey(p.id, opts)), extra]);
+    const m = d.methods[0];
+    if (!d.loc.ok) return `<p class="small">Pas de livraison au ${escapeHtml(cp)}. Retrait possible au dépôt. <button type="button" class="link" data-open-cp>Changer</button></p>`;
+    return `<p class="small"><strong>Livraison au ${escapeHtml(cp)}</strong> <button type="button" class="link small" data-open-cp>changer</button><br>
+      ${escapeHtml(m.name)} : <strong>${m.fee ? euro(m.fee) : "offerte"}</strong>${m.dates ? `, dès le ${fmtDate(m.dates[0])}` : ` · ${escapeHtml(m.delay)}`}.
+      ${m.note ? `<span class="muted">${escapeHtml(m.note)}.</span>` : ""}</p>`;
   }
 
-  root.innerHTML = `
-    <nav class="breadcrumb" aria-label="Fil d'Ariane">
-      <a href="index.html">Accueil</a>
-      <a href="catalogue.html?categorie=${cat.id}">${escapeHtml(cat.name)}</a>
-      <span>${escapeHtml(p.name)}</span>
-    </nav>
-    <div class="pdp">
-      <div class="pdp__media">
-        <img src="${imgSrc(p.id)}" alt="${escapeHtml(p.name)}" width="600" height="600">
-        ${discount ? `<span class="tag tag--promo tag--lg">-${discount} %</span>` : ""}
-        <p class="small muted">Illustration non contractuelle.</p>
+  function volumeViz() {
+    const l = lengthByCm(state.len);
+    const app = apparentM3(state.qty, state.len);
+    const depth = state.len / 100;
+    const pileLength = app / (depth * state.height);
+    const cubes = Array.from({ length: Math.ceil(state.qty) }, (_, i) => {
+      const frac = Math.min(1, state.qty - i);
+      return `<span class="vcube" style="--f:${l.factor * frac}"><i></i></span>`;
+    }).join("");
+    return `<div class="volume">
+      <h2 class="h4">Ce que représente votre commande</h2>
+      <div class="vcubes" aria-hidden="true">${cubes}</div>
+      <p class="small">Chaque cube correspond à <strong>1 stère</strong> (1 m³ de bûches de 1 m empilées). Recoupées en ${l.label}, les bûches se tassent : la partie foncée montre le <strong>volume apparent réel</strong>, soit ${num(app)} m³ au total. Même bois, même chaleur, moins de vide.</p>
+      <div class="volume__pile">
+        <label for="pileHeight" class="small">Hauteur de votre tas : <strong>${num(state.height, 1)} m</strong></label>
+        <input type="range" id="pileHeight" min="0.8" max="2" step="0.1" value="${state.height}">
+        <p class="small">Il vous faut un emplacement d'environ <strong>${num(pileLength, 1)} m de long</strong> sur ${l.label} de profondeur${state.len === 100 ? "" : " (une rangée de bûches)"}.</p>
       </div>
-      <div class="pdp__info">
-        <p class="card-product__brand">${escapeHtml(p.brand)}</p>
-        <h1>${escapeHtml(p.name)}</h1>
-        <dl class="refs">
-          <div><dt>Référence</dt><dd>${escapeHtml(p.ref)}</dd></div>
-          <div><dt>Réf. constructeur</dt><dd>${escapeHtml(p.oem)}</dd></div>
-        </dl>
-        <div id="compat">${compatHtml()}</div>
-        <div class="pdp__buy">
-          ${priceHtml(p, "price--lg")}
-          <p class="small muted">TTC · Livraison offerte dès ${SHOP.shipping.freeFrom} €</p>
-          ${stockLabel(p.stock)}
-          ${p.stock > 0 ? `<p class="small">Commandé et payé aujourd'hui, expédié <strong>${shipDate}</strong>.</p>` : ""}
-          <div class="pdp__actions">
-            <div class="qty">
-              <button type="button" data-step="-1" aria-label="Diminuer la quantité">−</button>
-              <input type="number" id="qty" value="1" min="1" max="${Math.max(1, p.stock)}" aria-label="Quantité">
-              <button type="button" data-step="1" aria-label="Augmenter la quantité">+</button>
-            </div>
-            <button class="btn btn--primary btn--lg" id="addBtn" ${p.stock === 0 ? "disabled" : ""}>Ajouter au panier</button>
-          </div>
-          ${p.stock === 0 ? `<p class="small"><a href="contact.html?piece=${encodeURIComponent(p.ref)}">Être prévenu du réassort</a></p>` : ""}
-        </div>
-        <ul class="pdp__perks">
-          <li>Paiement par Revolut ou virement bancaire</li>
-          <li>Retour possible sous 14 jours</li>
-          <li>Vérification de compatibilité gratuite avec votre VIN</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="tabs" role="tablist" aria-label="Informations produit">
-      <button role="tab" aria-selected="true" aria-controls="tab-desc" id="t-desc">Description</button>
-      <button role="tab" aria-selected="false" aria-controls="tab-specs" id="t-specs">Caractéristiques</button>
-      <button role="tab" aria-selected="false" aria-controls="tab-compat" id="t-compat">Compatibilité (${p.models.length})</button>
-      <button role="tab" aria-selected="false" aria-controls="tab-ship" id="t-ship">Livraison</button>
-    </div>
-    <div class="tab-panel" role="tabpanel" id="tab-desc" aria-labelledby="t-desc">
-      <p class="prose">${escapeHtml(p.desc)}</p>
-    </div>
-    <div class="tab-panel" role="tabpanel" id="tab-specs" aria-labelledby="t-specs" hidden>
-      <table class="table">
-        <tbody>
-          <tr><th scope="row">Marque</th><td>${escapeHtml(p.brand)}</td></tr>
-          <tr><th scope="row">Catégorie</th><td>${escapeHtml(cat.name)}</td></tr>
-          ${Object.entries(p.specs).map(([k, v]) => `<tr><th scope="row">${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join("")}
-        </tbody>
-      </table>
-    </div>
-    <div class="tab-panel" role="tabpanel" id="tab-compat" aria-labelledby="t-compat" hidden>
-      <table class="table">
-        <thead><tr><th>Châssis</th><th>Modèle</th><th>Années</th></tr></thead>
-        <tbody>
-          ${p.models.map(modelByCode).map((m) => `<tr><td><strong>${m.code}</strong></td><td>${escapeHtml(m.name.replace(/ \(.*\)/, ""))}</td><td>${m.years}</td></tr>`).join("")}
-        </tbody>
-      </table>
-      <p class="small muted">La compatibilité peut dépendre de la motorisation ou des options. Envoyez-nous votre VIN pour une vérification gratuite.</p>
-    </div>
-    <div class="tab-panel" role="tabpanel" id="tab-ship" aria-labelledby="t-ship" hidden>
-      <table class="table">
-        <thead><tr><th>Mode</th><th>Délai</th><th>Prix</th></tr></thead>
-        <tbody>
-          ${SHOP.shipping.methods.map((m) => `<tr><td>${escapeHtml(m.name)}</td><td>${escapeHtml(m.delay)}</td><td>${m.price === 0 ? "Gratuit" : euro(m.price) + (m.free ? ` (offert dès ${SHOP.shipping.freeFrom} €)` : "")}</td></tr>`).join("")}
-        </tbody>
-      </table>
-      <p class="small muted">Les délais courent à partir de la réception de votre paiement. <a href="livraison-retours.html">Tout savoir sur la livraison et les retours</a>.</p>
     </div>`;
-
-  // Quantité
-  const qty = $("#qty");
-  $$("[data-step]", root).forEach((b) =>
-    b.addEventListener("click", () => {
-      qty.value = Math.min(Math.max(1, p.stock), Math.max(1, (+qty.value || 1) + +b.dataset.step));
-    })
-  );
-  $("#addBtn").addEventListener("click", () => {
-    const n = Math.max(1, Math.min(+qty.value || 1, p.stock));
-    Cart.add(p.id, n);
-  });
-
-  // Onglets
-  const tabs = $$('[role="tab"]', root);
-  tabs.forEach((t) =>
-    t.addEventListener("click", () => {
-      tabs.forEach((x) => {
-        const on = x === t;
-        x.setAttribute("aria-selected", on);
-        $("#" + x.getAttribute("aria-controls")).hidden = !on;
-      });
-    })
-  );
-
-  // Véhicule
-  root.addEventListener("click", (e) => {
-    if (e.target.closest("[data-open-garage]")) $("#vehicleChip").click();
-  });
-  document.addEventListener("vehicle:change", () => ($("#compat").innerHTML = compatHtml()));
-
-  // Produits associés : même catégorie et au moins un modèle en commun
-  const related = PRODUCTS.filter((x) => x.id !== p.id && x.category === p.category)
-    .concat(PRODUCTS.filter((x) => x.id !== p.id && x.category !== p.category && x.models.some((m) => p.models.includes(m))))
-    .slice(0, 4);
-  if (related.length) {
-    $("#relatedSection").hidden = false;
-    $("#related").innerHTML = related.map(productCard).join("");
   }
+
+  function priceBlock() {
+    const opts = { len: state.len, dry: state.dry };
+    const unit = unitPrice(p, opts);
+    const total = unit * state.qty;
+    if (p.type !== "config") {
+      return `<div class="price price--lg"><strong>${euro(total)}</strong></div>
+        <p class="small muted">${euro(unit)} / ${p.unit} · TVA ${SHOP.vatRate} % incluse</p>`;
+    }
+    const ess = essenceById(p.essence);
+    const kg = state.qty * ess.kg * (state.dry === "four" ? 0.92 : 1);
+    return `<div class="price price--lg"><strong>${euro(total)}</strong></div>
+      <dl class="price-facts">
+        <div><dt>Prix au stère</dt><dd>${euro(unit)}</dd></div>
+        <div><dt>Prix au m³ apparent</dt><dd>${euro(unit / lengthByCm(state.len).factor)}</dd></div>
+        <div><dt>Volume livré</dt><dd>${num(apparentM3(state.qty, state.len))} m³</dd></div>
+        <div><dt>Poids approximatif</dt><dd>${num(kg / 1000, 1)} t</dd></div>
+        <div><dt>Énergie</dt><dd>≈ ${num((state.qty * ess.kwh) / 1000, 1)} MWh</dd></div>
+      </dl>`;
+  }
+
+  function render() {
+    const ess = essenceById(p.essence);
+    const cat = categoryById(p.category);
+    const isConfig = p.type === "config";
+    document.title = `${p.name} · ${SHOP.name}`;
+
+    root.innerHTML = `
+      <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><a href="catalogue.html?categorie=${cat.id}">${escapeHtml(cat.name)}</a><span>${escapeHtml(p.name)}</span></nav>
+      <div class="pdp">
+        <div class="pdp__media">
+          <div class="pdp__art" id="pdpArt">${productArt(p, state)}</div>
+          ${isConfig ? `<div id="volume">${volumeViz()}</div>` : ""}
+        </div>
+        <form class="pdp__info" id="buyForm">
+          <p class="card-product__brand">${escapeHtml(cat.name)}</p>
+          <h1>${escapeHtml(p.name)}</h1>
+          <p>${escapeHtml(isConfig ? ess.text : p.text)}</p>
+          ${isConfig ? `
+            <div class="card-product__meters card-product__meters--lg">
+              <span>Chaleur</span>${meter(Math.round((ess.kwh - 1500) / 140), "Pouvoir calorifique")}
+              <span>Flamme</span>${meter(ess.flame, "Flamme")}
+              <span>Braises</span>${meter(ess.embers, "Braises")}
+            </div>
+            <fieldset class="opt-group">
+              <legend>Essence</legend>
+              <div class="seg seg--wrap">${configs.map((c) => `<button type="button" class="seg__btn" data-essence="${c.id}" aria-pressed="${c.id === p.id}">${escapeHtml(essenceById(c.essence).name.replace(" feuillus durs", ""))}</button>`).join("")}</div>
+            </fieldset>
+            <fieldset class="opt-group">
+              <legend>Longueur des bûches</legend>
+              <div class="seg">${p.lengths.map((cm) => `<button type="button" class="seg__btn" data-len="${cm}" aria-pressed="${cm === state.len}">${lengthByCm(cm).label}${lengthByCm(cm).surcharge ? `<small>+${lengthByCm(cm).surcharge} €</small>` : "<small>&nbsp;</small>"}</button>`).join("")}</div>
+              <p class="small muted">${escapeHtml(lengthByCm(state.len).use)}. Mesurez votre foyer et retirez 5 à 10 cm.</p>
+            </fieldset>
+            <fieldset class="opt-group">
+              <legend>Séchage</legend>
+              <div class="options options--2">${p.dryings.map((id) => { const d = dryingById(id); return `
+                <label class="option option--card">
+                  <input type="radio" name="dry" value="${id}" ${id === state.dry ? "checked" : ""}>
+                  <span class="option__body"><strong>${d.name} <span class="hum">${d.humidity}</span></strong><span class="small muted">${d.text}</span></span>
+                  <span class="option__price">${d.surcharge ? `+${d.surcharge} €/st` : "Inclus"}</span>
+                </label>`; }).join("")}</div>
+            </fieldset>` : `
+            <ul class="pdp__perks">
+              ${p.len ? `<li>Longueur ${p.len} cm</li>` : ""}${p.dry ? `<li>${dryingById(p.dry).name} (${dryingById(p.dry).humidity} d'humidité)</li>` : ""}
+              <li>${p.ship === "truck" ? "Livré avec votre bois, ou sur palette" : "Expédié en colis, ou livré avec votre bois"}</li>
+            </ul>`}
+
+          <div class="pdp__buy">
+            <div class="pdp__qty">
+              <label for="qty">${isConfig ? "Nombre de stères" : "Quantité"}</label>
+              <div class="qty">
+                <button type="button" data-step="-1" aria-label="Diminuer">−</button>
+                <input id="qty" type="number" min="1" max="${p.max || 30}" value="${state.qty}" inputmode="numeric">
+                <button type="button" data-step="1" aria-label="Augmenter">+</button>
+              </div>
+              ${isConfig ? `<input type="range" id="qtyRange" min="1" max="30" value="${state.qty}" aria-label="Nombre de stères">` : ""}
+            </div>
+            <div id="priceBlock">${priceBlock()}</div>
+            <button class="btn btn--primary btn--lg btn--block" type="submit">Ajouter au panier</button>
+            <div id="deliveryHint">${deliveryHint()}</div>
+          </div>
+        </form>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" aria-selected="true" aria-controls="tab-carac" id="t1">Caractéristiques</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="tab-livraison" id="t2">Livraison</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="tab-conseils" id="t3">Stockage et conseils</button>
+      </div>
+      <div class="tab-panel" role="tabpanel" id="tab-carac" aria-labelledby="t1">
+        <div class="table-wrap"><table class="table"><tbody>
+          ${isConfig ? `
+            <tr><th>Essence</th><td>${escapeHtml(ess.name)}</td></tr>
+            <tr><th>Origine</th><td>Forêts françaises, coupes d'éclaircie et bois d'exploitation durable</td></tr>
+            <tr><th>Pouvoir calorifique</th><td>≈ ${num(ess.kwh, 0)} kWh par stère à 20 % d'humidité</td></tr>
+            <tr><th>Masse</th><td>≈ ${ess.kg} kg par stère</td></tr>
+            <tr><th>Humidité</th><td>${DRYINGS.map((d) => `${d.name} : ${d.humidity}`).join(" · ")}</td></tr>
+            <tr><th>Conversion</th><td>${LENGTHS.map((l) => `${l.label} : ${num(l.factor)} m³`).join(" · ")} par stère</td></tr>
+            <tr><th>Livraison</th><td>En vrac, déchargé par benne basculante</td></tr>`
+          : `<tr><th>Description</th><td>${escapeHtml(p.text)}</td></tr><tr><th>Conditionnement</th><td>${escapeHtml(p.unit)}</td></tr>`}
+          <tr><th>TVA</th><td>${SHOP.vatRate} % incluse</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="tab-panel" role="tabpanel" id="tab-livraison" aria-labelledby="t2" hidden>
+        <p>Dans nos zones de tournée, le bois est livré par nos camions à jour fixe, déchargé au plus près de votre abri si l'accès le permet (porte de 2,5 m minimum, sol stable). Ailleurs en France métropolitaine, il part sur palette par transporteur.</p>
+        <p><a href="livraison.html">Voir les zones, les tarifs et les prochaines dates</a></p>
+      </div>
+      <div class="tab-panel" role="tabpanel" id="tab-conseils" aria-labelledby="t3" hidden>
+        <ul class="prose">
+          <li>Stockez le bois à l'abri de la pluie mais <strong>ventilé</strong> : couvrez le dessus, laissez les côtés à l'air.</li>
+          <li>Surélevez le tas de 10 à 15 cm (palettes, chevrons) pour éviter les remontées d'humidité.</li>
+          <li>Rentrez à l'intérieur la quantité de quelques jours : le bois finit de sécher près du poêle.</li>
+          <li>Un bois à plus de 20 % d'humidité encrasse le conduit et chauffe moitié moins : vérifiez avec un humidimètre.</li>
+        </ul>
+      </div>`;
+  }
+
+  // Mise à jour partielle pour garder le focus pendant les réglages
+  function refresh() {
+    $("#pdpArt").innerHTML = productArt(p, state);
+    $("#priceBlock").innerHTML = priceBlock();
+    $("#deliveryHint").innerHTML = deliveryHint();
+    if ($("#volume")) $("#volume").innerHTML = volumeViz();
+    $("#qty").value = state.qty;
+    if ($("#qtyRange")) $("#qtyRange").value = state.qty;
+  }
+
+  root.addEventListener("click", (e) => {
+    const t = e.target;
+    const essBtn = t.closest("[data-essence]");
+    if (essBtn) {
+      p = productById(essBtn.dataset.essence);
+      history.replaceState(null, "", `?id=${p.id}`);
+      render();
+      renderRelated();
+      $(`[data-essence="${p.id}"]`).focus();
+      return;
+    }
+    const lenBtn = t.closest("[data-len]");
+    if (lenBtn) {
+      state.len = +lenBtn.dataset.len;
+      render();
+      $(`[data-len="${state.len}"]`).focus();
+      return;
+    }
+    const step = t.closest("[data-step]");
+    if (step) { state.qty = clampQty(state.qty + +step.dataset.step); refresh(); }
+    if (t.closest("[data-open-cp]")) $("#cpChip").click();
+    const tab = t.closest('[role="tab"]');
+    if (tab && tab.closest(".tabs")) {
+      $$(".tabs [role=tab]", root).forEach((b) => {
+        const on = b === tab;
+        b.setAttribute("aria-selected", on);
+        $("#" + b.getAttribute("aria-controls")).hidden = !on;
+      });
+    }
+  });
+
+  const clampQty = (n) => Math.min(p.max || 30, Math.max(1, Math.round(n) || 1));
+  root.addEventListener("input", (e) => {
+    const t = e.target;
+    if (t.id === "qtyRange") { state.qty = +t.value; refresh(); }
+    if (t.id === "pileHeight") {
+      state.height = +t.value;
+      $("#volume").innerHTML = volumeViz();
+      $("#pileHeight").focus();
+    }
+  });
+  root.addEventListener("change", (e) => {
+    const t = e.target;
+    if (t.id === "qty") { state.qty = clampQty(+t.value); refresh(); }
+    if (t.name === "dry") { state.dry = t.value; refresh(); }
+  });
+  root.addEventListener("submit", (e) => {
+    e.preventDefault();
+    Cart.add(p.id, p.type === "config" ? { len: state.len, dry: state.dry } : {}, state.qty);
+    $("#deliveryHint").innerHTML = deliveryHint();
+  });
+  document.addEventListener("cp:change", () => ($("#deliveryHint").innerHTML = deliveryHint()));
+
+  function renderRelated() {
+    const ids = p.type === "config" ? ["allumage", "allume-feu", "humidimetre", "bache"] : ["melange", "palette-33", "allumage", "allume-feu"].filter((id) => id !== p.id);
+    $("#related").innerHTML = ids.slice(0, 4).map((id) => productCard(productById(id))).join("");
+    $("#relatedSection").hidden = false;
+  }
+
+  render();
+  renderRelated();
 })();

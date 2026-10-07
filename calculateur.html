@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculateur de besoins en bois · Bois & Braise</title>
+  <meta name="description" content="Combien de stères de bois pour l'hiver ? Calculez vos besoins selon votre surface, votre isolation et votre appareil, comparez le coût avec les autres énergies et convertissez stères et m³.">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="calculateur">
+  <main id="main" class="container page">
+    <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>Calculateur</span></nav>
+    <h1>Combien de bois pour cet hiver ?</h1>
+    <p class="lead">Estimez votre consommation annuelle, son coût face aux autres énergies, et l'effet de l'humidité du bois sur votre facture.</p>
+
+    <section class="calc">
+      <form class="panel calc__form" id="calcForm">
+        <div class="field">
+          <label for="cCp">Code postal <span class="muted">(pour le climat)</span></label>
+          <input id="cCp" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="ex. 45000">
+          <p class="small muted" id="cClimate"></p>
+        </div>
+        <div class="field">
+          <label for="cSurface">Surface chauffée au bois : <strong id="cSurfaceOut"></strong></label>
+          <input type="range" id="cSurface" min="15" max="300" step="5" value="100">
+        </div>
+        <fieldset class="opt-group">
+          <legend>Isolation du logement</legend>
+          <div class="seg" id="cInsulation"></div>
+          <p class="small muted" id="cInsulationText"></p>
+        </fieldset>
+        <fieldset class="opt-group">
+          <legend>Usage du bois</legend>
+          <div class="seg seg--wrap" id="cUsage"></div>
+        </fieldset>
+        <div class="form-grid">
+          <div class="field"><label for="cAppliance">Appareil</label><select id="cAppliance"></select></div>
+          <div class="field"><label for="cEssence">Essence</label><select id="cEssence"></select></div>
+          <div class="field"><label for="cLength">Longueur</label><select id="cLength"></select></div>
+          <div class="field"><label for="cDry">Séchage</label><select id="cDry"></select></div>
+        </div>
+      </form>
+
+      <div class="calc__result" aria-live="polite">
+        <div class="result-card">
+          <p class="result-card__label">Votre besoin estimé</p>
+          <p class="result-card__big"><span id="rSteres"></span> <small>stères / an</small></p>
+          <dl class="result-card__facts">
+            <div><dt>Volume livré</dt><dd id="rApparent"></dd></div>
+            <div><dt>Budget bois</dt><dd id="rBudget"></dd></div>
+            <div><dt>Poids</dt><dd id="rWeight"></dd></div>
+            <div><dt>Chaleur utile</dt><dd id="rKwh"></dd></div>
+          </dl>
+          <p class="small" id="rWarning" hidden></p>
+          <button class="btn btn--primary btn--lg btn--block" type="button" id="rAdd"></button>
+          <p class="small muted center">Estimation indicative : la consommation réelle dépend de vos habitudes et de la rigueur de l'hiver.</p>
+        </div>
+
+        <div class="panel">
+          <h2 class="h3">Ce que coûterait la même chaleur</h2>
+          <p class="small muted">Coût annuel pour produire <span id="rKwh2"></span> de chaleur utile, rendement des appareils inclus.</p>
+          <div class="bars" id="bars" role="list"></div>
+          <details class="table-toggle">
+            <summary>Voir les chiffres en tableau</summary>
+            <div class="table-wrap"><table class="table" id="barsTable"></table></div>
+          </details>
+          <p class="small muted">Prix moyens indicatifs pour un particulier en France. Bois : notre tarif pour votre sélection.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" id="humidite">
+      <div class="humid panel">
+        <div>
+          <h2>Le bois humide coûte cher</h2>
+          <p class="muted">Une partie de l'énergie sert à évaporer l'eau au lieu de chauffer la maison. Faites glisser pour voir l'effet de l'humidité sur votre besoin.</p>
+          <label for="hRange">Humidité du bois : <strong id="hOut"></strong></label>
+          <input type="range" id="hRange" min="10" max="50" step="1" value="35">
+          <div class="humid__scale" aria-hidden="true"><span>Sec four</span><span>Sec</span><span>Mi-sec</span><span>Vert</span></div>
+        </div>
+        <div class="humid__result">
+          <div class="gauge" id="hGauge"><span></span></div>
+          <p id="hText"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" id="convertisseur">
+      <h2>Convertisseur stère ↔ m³ apparent</h2>
+      <p class="muted">Un <strong>stère</strong> est 1 m³ de bûches de 1 m bien empilées. Recoupées plus court, les bûches se rangent mieux et occupent moins de place : c'est le <strong>m³ apparent</strong>. La quantité de bois, elle, ne change pas.</p>
+      <div class="convert panel">
+        <div class="convert__in">
+          <div class="field"><label for="vValue">Quantité</label><input type="number" id="vValue" min="0" step="0.1" value="5"></div>
+          <div class="field"><label for="vUnit">Unité</label>
+            <select id="vUnit">
+              <option value="st">stère(s)</option>
+              <option value="100">m³ apparent en 1 m</option>
+              <option value="50">m³ apparent en 50 cm</option>
+              <option value="33">m³ apparent en 33 cm</option>
+              <option value="25">m³ apparent en 25 cm</option>
+            </select>
+          </div>
+        </div>
+        <div class="convert__out" id="vOut"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/calc-core.js"></script>
+  <script src="js/calculator.js"></script>
+</body>
+</html>
