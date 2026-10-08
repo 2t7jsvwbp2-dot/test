@@ -11,9 +11,9 @@ Boutique en ligne de bois de chauffage pour la France. Site statique (HTML, CSS,
 | `produit.html?id=…` | Configurateur : essence, longueur, séchage, nombre de stères ; prix au stère et au m³ apparent, poids, énergie, visualisation du volume et de la place à prévoir, prix de livraison pour votre code postal |
 | `calculateur.html` | Besoin annuel en stères (surface, isolation, climat déduit du code postal, appareil, usage), comparaison du coût avec l'électricité, le fioul, le gaz et les granulés, effet de l'humidité, convertisseur stère ↔ m³ apparent |
 | `essences.html` | Questionnaire « quelle essence pour moi ? », tableau comparatif triable, fiches essences |
-| `livraison.html` | Zones et tarifs, test par code postal, calendrier des prochaines tournées, conditions d'accès |
-| `panier.html`, `commande.html` | Panier avec code promo et livraison calculée selon le code postal et le volume ; choix du mode, de la date et du créneau de livraison ; paiement |
-| `confirmation.html`, `mes-commandes.html` | Instructions de paiement (Revolut, virement ou à la livraison) et historique |
+| `livraison.html` | Livraison sur palette : tarif, délai, test par code postal, simulateur du nombre de palettes |
+| `panier.html`, `commande.html` | Panier avec code promo et livraison calculée au nombre de palettes ; coordonnées et paiement. Une commande doit contenir du bois : les accessoires seuls sont refusés |
+| `confirmation.html`, `mes-commandes.html` | Paiement par carte (lien de paiement) proposé en premier, virement instantané en alternative ; historique des commandes |
 | `faq.html` (avec recherche), `contact.html`, `a-propos.html` | Aide |
 | `cgv.html`, `mentions-legales.html`, `confidentialite.html` | Pages légales, remplies depuis la configuration |
 
@@ -23,11 +23,13 @@ Les illustrations (tas de bûches, sacs, palettes) sont dessinées en SVG par `j
 
 Tout se règle dans **`js/config.js`**. Tant qu'un champ est vide, le site affiche « [à compléter] ».
 
-1. **Identité légale** : `legalName`, `legalForm`, `siret`, `vatNumber`, `director`, `address`, `email`, `phone`, `depotLabel`.
-2. **Zones de livraison** : `delivery.zones` liste, pour chaque zone, les départements desservis, le prix, le volume à partir duquel la livraison est offerte, les jours de tournée (1 = lundi … 6 = samedi) et le délai minimum. Adaptez-les à l'emplacement de votre dépôt. Hors zone, le site propose le transporteur sur palette (`delivery.carrier`) ; les petits colis seuls partent en Colissimo (`delivery.parcel`).
-3. **Paiement** : lien et pseudo Revolut (`payment.revolut`), coordonnées bancaires (`payment.transfer`), paiement au chauffeur (`payment.onDelivery`).
-4. **Réception des commandes** : créez un formulaire gratuit sur [formspree.io](https://formspree.io) et collez son adresse dans `formEndpoint`. Sans cela, le client doit vous envoyer lui-même le récapitulatif par e-mail.
-5. **Stock de la saison** (`season`), **codes promo** (`promoCodes`), **TVA** (`vatRate`, 10 % pour le bois de chauffage vendu aux particuliers).
+1. **Identité légale** : `legalName`, `legalForm`, `siret`, `vatNumber`, `director`, `address`, `email`, `phone`.
+2. **Paiement par carte** : collez dans `payment.card.link` le lien de votre page de paiement (Stripe, SumUp, PayPal, Revolut Business, votre banque…). C'est le moyen proposé en premier.
+3. **Virement instantané** : `payment.transfer.holder`, `iban`, `bic`, `bank`. Proposé en alternative.
+4. **Livraison** (`delivery`) : uniquement sur palette, par transporteur. Réglez le prix par palette (`feePerPallet`), le volume maximum par palette (`pallet`, en stères), le délai annoncé (`minDays`, `maxDays`) et les départements non livrés (`excluded`).
+5. **Montant minimum** (`minOrderAmount`) : facultatif. Les accessoires (marqués `addon: true` dans `js/data.js`) ne sont jamais vendus seuls ; vous pouvez en plus exiger un montant minimum de bois.
+6. **Réception des commandes** : créez un formulaire gratuit sur [formspree.io](https://formspree.io) et collez son adresse dans `formEndpoint`. Sans cela, le client doit vous envoyer lui-même le récapitulatif par e-mail.
+7. **Stock de la saison** (`season`), **codes promo** (`promoCodes`), **TVA** (`vatRate`, 10 % pour le bois de chauffage vendu aux particuliers).
 
 Complétez aussi le médiateur de la consommation dans `mentions-legales.html` et faites relire `cgv.html`.
 
@@ -38,13 +40,14 @@ Complétez aussi le médiateur de la consommation dans `mentions-legales.html` e
 - `DRYINGS` : supplément pour le séchage au four.
 - `PRODUCTS` : les bûches au stère (prix de base pour du 1 m séché à l'air) et les produits à prix fixe (palettes, sacs, densifié, granulés, accessoires).
 - `ENERGIES` : prix du kWh utile des autres énergies, pour le comparateur. À mettre à jour chaque saison.
+- `PHOTOS` : vos photos de produits. Déposez-les dans `images/produits/` (JPEG ou WebP, 1200 × 900 px) et indiquez-les ici par identifiant de produit ; elles remplacent alors les illustrations dessinées.
 
 ## Comment se passe une commande
 
-1. Le client compose son panier, saisit son code postal et choisit une date de tournée.
-2. La commande vous est envoyée par e-mail (via Formspree), avec l'adresse, le lieu de déchargement et l'accès camion.
-3. Le client paie par Revolut ou virement avec le numéro de commande en référence, ou au chauffeur.
-4. Vous livrez à la date choisie.
+1. Le client compose son panier (du bois obligatoirement, accessoires en complément) et saisit son adresse.
+2. La commande vous est envoyée par e-mail (via Formspree).
+3. Le client paie par carte via votre lien de paiement, ou par virement instantané, avec le numéro de commande en référence.
+4. Dès réception du paiement, vous préparez la ou les palettes ; le transporteur livre sous 7 à 12 jours.
 
 ## Tester en local
 

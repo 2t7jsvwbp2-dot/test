@@ -203,6 +203,15 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .qty--sm button { width: 34px; height: 36px; font-size: 1rem; }
 .qty--sm span { min-width: 34px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
 
+.art-photo { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--cream); }
+.addon-note { margin: 0; font-size: .76rem; font-weight: 600; color: var(--forest); }
+.cart-issue { background: var(--amber-soft); border: 1px solid #efd3a0; color: #5c3a00; border-radius: 12px; padding: 12px 14px; font-size: .9rem; }
+.cart-issue a { font-weight: 600; }
+.pay-alt { border: 1px dashed #cdbba6; border-radius: 16px; padding: 18px 20px; }
+.pay-alt summary { cursor: pointer; font-weight: 700; color: var(--ember); }
+.pay-alt[open] summary { margin-bottom: 14px; }
+.pay-logo--card { background: var(--charcoal); }
+
 /* ---------- Sections ---------- */
 .section { padding-block: 64px; }
 .section--tight { padding-block: 32px; }
@@ -675,3 +684,9 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
   .result-card__big { font-size: 3.2rem; }
   .season { padding: 20px; }
 }
+.btn.is-disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+.option--static { cursor: default; border-color: var(--ember); background: var(--ember-soft); }
+.pallet-sim label { font-weight: 600; display: block; }
+.pallet-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.pal { width: 54px; height: 54px; border: 2px dashed #cdbba6; border-radius: 6px 6px 0 0; position: relative; overflow: hidden; border-bottom: 8px solid #c9a26b; }
+.pal i { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, #c89a62, #8a5a2b); transition: height .3s; }

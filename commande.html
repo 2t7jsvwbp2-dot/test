@@ -15,7 +15,7 @@
 <body data-page="commande">
   <main id="main" class="container page">
     <ol class="progress" aria-label="Étapes de la commande">
-      <li class="is-done"><a href="panier.html">Panier</a></li><li class="is-current">Livraison et paiement</li><li>Confirmation</li>
+      <li class="is-done"><a href="panier.html">Panier</a></li><li class="is-current">Coordonnées et paiement</li><li>Confirmation</li>
     </ol>
     <h1>Finaliser la commande</h1>
 
@@ -32,7 +32,7 @@
             <div class="field"><label for="firstname">Prénom</label><input id="firstname" name="firstname" required autocomplete="given-name" data-error="Indiquez votre prénom."></div>
             <div class="field"><label for="lastname">Nom</label><input id="lastname" name="lastname" required autocomplete="family-name" data-error="Indiquez votre nom."></div>
             <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" required autocomplete="email" data-error="Indiquez une adresse e-mail valide, ex. nom@exemple.fr."></div>
-            <div class="field"><label for="phone">Téléphone</label><input id="phone" name="phone" type="tel" required autocomplete="tel" pattern="[0-9+ .\(\)\-]{10,20}" data-error="Indiquez un numéro de téléphone : le chauffeur vous appelle avant de passer."></div>
+            <div class="field"><label for="phone">Téléphone</label><input id="phone" name="phone" type="tel" required autocomplete="tel" pattern="[0-9+ .\(\)\-]{10,20}" data-error="Indiquez un numéro de téléphone : le transporteur vous appelle pour fixer le rendez-vous."></div>
           </div>
         </section>
 
@@ -44,45 +44,26 @@
             <div class="field"><label for="zip">Code postal</label><input id="zip" name="zip" required pattern="[0-9]{5}" inputmode="numeric" maxlength="5" autocomplete="postal-code" data-error="Le code postal doit contenir 5 chiffres."></div>
             <div class="field"><label for="city">Ville</label><input id="city" name="city" required autocomplete="address-level2" data-error="Indiquez la ville."></div>
           </div>
-          <div id="accessFields">
-            <div class="form-grid">
-              <div class="field span-2"><label for="unload">Où décharger le bois ?</label>
-                <select id="unload" name="unload">
-                  <option>Devant le portail, sur la voie d'accès</option>
-                  <option>Dans la cour ou l'allée</option>
-                  <option>Au plus près de l'abri à bois (si accessible)</option>
-                </select>
-              </div>
-            </div>
-            <label class="check"><input type="checkbox" name="access" id="access" checked> <span>Un camion de 3,5 t (2,5 m de large, 3,2 m de haut) peut accéder au lieu de déchargement.</span></label>
-            <p class="small muted" id="accessHint" hidden>Pas de souci : précisez l'accès dans le message, nous adapterons le véhicule ou déchargerons au plus près.</p>
+          <div class="field"><label for="access">Accès pour le camion <span class="muted">(facultatif)</span></label>
+            <input id="access" name="access" placeholder="Chemin étroit, pente, portail de moins de 3 m…">
           </div>
-          <p class="small muted" id="pickupInfo" hidden>Retrait à <span data-shop="address"></span>, sur rendez-vous. L'adresse sert uniquement à la facture.</p>
         </section>
 
         <section class="panel">
-          <h2><span class="panel__num">3</span> Mode et date de livraison</h2>
+          <h2><span class="panel__num">3</span> Livraison</h2>
           <div class="options" id="shippingOptions"></div>
-          <div id="dateBlock" hidden>
-            <p class="opt-title" id="dateTitle">Choisissez votre date</p>
-            <div class="date-grid" id="dateGrid" role="radiogroup" aria-labelledby="dateTitle"></div>
-            <div class="seg seg--sm" id="slotSeg" role="radiogroup" aria-label="Créneau">
-              <button type="button" class="seg__btn" data-slot="matin" aria-pressed="true">Matin 8h – 12h</button>
-              <button type="button" class="seg__btn" data-slot="apres-midi" aria-pressed="false">Après-midi 13h – 18h</button>
-            </div>
-            <p class="small muted">Le chauffeur vous appelle la veille pour confirmer l'heure de passage.</p>
-          </div>
+          <p class="small muted">Le transporteur vous appelle pour convenir du jour de livraison. La palette est déchargée au hayon, en bordure de propriété.</p>
         </section>
 
         <section class="panel">
           <h2><span class="panel__num">4</span> Paiement</h2>
           <div class="options" id="paymentOptions"></div>
-          <p class="small muted">Aucun paiement n'est demandé sur ce site : vous recevez les instructions à l'écran après validation.</p>
+          <p class="small muted">Après validation, vous recevez le lien de paiement par carte, ou les coordonnées pour le virement instantané. Votre commande est expédiée dès réception du paiement.</p>
         </section>
 
         <section class="panel">
           <h2><span class="panel__num">5</span> Un message pour nous ?</h2>
-          <div class="field"><label for="note">Message <span class="muted">(facultatif)</span></label><textarea id="note" name="note" rows="3" placeholder="Accès, chien, horaires, demande particulière…"></textarea></div>
+          <div class="field"><label for="note">Message <span class="muted">(facultatif)</span></label><textarea id="note" name="note" rows="3" placeholder="Horaires, demande particulière…"></textarea></div>
         </section>
       </div>
 
@@ -91,6 +72,7 @@
         <ul class="mini-cart" id="miniCart"></ul>
         <dl class="totals" id="totals"></dl>
         <p class="small" id="summaryDelivery"></p>
+        <p class="cart-issue" id="checkoutIssue" role="alert" hidden></p>
         <div class="field">
           <label class="check"><input type="checkbox" id="cgv" required data-error="Vous devez accepter les conditions générales de vente."> <span>J'ai lu et j'accepte les <a href="cgv.html" target="_blank" rel="noopener">conditions générales de vente</a>.</span></label>
         </div>

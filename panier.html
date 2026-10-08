@@ -14,7 +14,7 @@
 <body data-page="panier">
   <main id="main" class="container page">
     <ol class="progress" aria-label="Étapes de la commande">
-      <li class="is-current">Panier</li><li>Livraison et paiement</li><li>Confirmation</li>
+      <li class="is-current">Panier</li><li>Coordonnées et paiement</li><li>Confirmation</li>
     </ol>
     <h1>Votre panier</h1>
     <div class="cart-layout" id="cartLayout">
@@ -30,7 +30,7 @@
           <input id="cartCp" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="ex. 45000">
         </div>
         <p class="small" id="deliveryLine"></p>
-        <div class="vol-meter" id="volMeter" hidden></div>
+        <div class="vol-meter" id="volMeter" hidden aria-hidden="true"></div>
         <p class="small muted" id="freeHint"></p>
         <form class="promo" id="promoForm">
           <label for="promoInput">Code promo</label>
@@ -41,8 +41,9 @@
           <p class="small" id="promoMsg" role="status"></p>
         </form>
         <dl class="totals" id="totals"></dl>
-        <a class="btn btn--primary btn--lg btn--block" href="commande.html">Choisir la livraison</a>
-        <p class="small muted center">Date de livraison et paiement à l'étape suivante.</p>
+        <p class="cart-issue" id="cartIssue" role="alert" tabindex="-1" hidden></p>
+        <a class="btn btn--primary btn--lg btn--block" href="commande.html" id="toCheckout">Passer commande</a>
+        <p class="small muted center">Paiement par carte bancaire ou virement instantané.</p>
       </aside>
     </div>
     <div class="empty" id="cartEmpty" hidden>

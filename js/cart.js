@@ -31,24 +31,28 @@
       </article>`;
     }).join("");
 
-    // Livraison estimée
+    // Livraison sur palette : remplissage de la dernière palette
     const m = t.method;
+    const cap = m.pallets * SHOP.delivery.pallet;
+    const room = round2(cap - t.st);
+    $("#volMeter").innerHTML = `<span style="width:${Math.min(100, (t.st / cap) * 100)}%"></span>`;
+    $("#volMeter").hidden = !t.st;
+    $("#freeHint").textContent = t.st && room >= 0.5
+      ? `Il reste de la place pour ${num(room)} stère${room >= 2 ? "s" : ""} sur ${m.pallets > 1 ? "vos palettes" : "votre palette"}, sans frais de livraison en plus.`
+      : "";
     const loc = t.del.loc;
-    let hint = "";
-    if (!deptOf(cp)) hint = "Saisissez votre code postal pour calculer la livraison.";
-    else if (!loc.ok) hint = "Nous ne livrons pas ce département : retrait au dépôt uniquement.";
-    else if (m.id === "camion") {
-      const z = m.zone;
-      const left = round2(z.freeFromSteres - t.st);
-      hint = left > 0 ? `Encore ${num(left)} stère${left > 1 ? "s" : ""} pour la livraison offerte en ${z.name.split(" ·")[0]}.` : "Livraison offerte pour votre volume.";
-      $("#volMeter").innerHTML = `<span style="width:${Math.min(100, (t.st / z.freeFromSteres) * 100)}%"></span>`;
-    } else if (m.id === "colis") hint = m.note || "Livraison offerte.";
-    else hint = m.note;
-    $("#volMeter").hidden = m.id !== "camion";
-    $("#freeHint").textContent = hint;
-    $("#deliveryLine").innerHTML = deptOf(cp) && loc.ok ? `<strong>${escapeHtml(m.name)}</strong><br><span class="muted">${escapeHtml(m.delay)}</span>` : "";
+    $("#deliveryLine").innerHTML = deptOf(cp) && !loc.ok
+      ? '<span class="error">Nous ne livrons pas ce département (Corse, outre-mer).</span>'
+      : `<strong>${escapeHtml(m.name)}</strong> · ${plural(m.pallets, "palette")}<br><span class="muted">${escapeHtml(m.delay)}</span>`;
 
-    $("#totals").innerHTML = totalsHtml(t, { cpKnown: !!deptOf(cp) });
+    $("#cartIssue").hidden = !t.issue;
+    $("#cartIssue").innerHTML = t.issue ? `${escapeHtml(t.issue)} <a href="catalogue.html?categorie=buches">Choisir du bois</a>` : "";
+    const go = $("#toCheckout");
+    const blocked = Boolean(t.issue || (deptOf(cp) && !loc.ok));
+    go.classList.toggle("is-disabled", blocked);
+    go.setAttribute("aria-disabled", blocked);
+
+    $("#totals").innerHTML = totalsHtml(t);
     $("#volTotal").textContent = t.st ? `Volume total : ${num(t.st)} stère${t.st >= 2 ? "s" : ""} (équivalent)` : "";
     if (t.promo) {
       $("#promoInput").value = t.promo.code;
@@ -56,6 +60,10 @@
       $("#promoMsg").className = "small ok";
     }
   }
+
+  $("#toCheckout").addEventListener("click", (e) => {
+    if (e.currentTarget.getAttribute("aria-disabled") === "true") { e.preventDefault(); $("#cartIssue").focus?.(); toast(computeTotals().issue || "Nous ne livrons pas ce code postal."); }
+  });
 
   $("#cartList").addEventListener("click", (e) => {
     const b = e.target.closest("[data-set]");

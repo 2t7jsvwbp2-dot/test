@@ -38,11 +38,11 @@
   // ---------- Code postal ----------
   const cpInput = $("#heroCpInput");
   cpInput.value = store.get("cp", "");
-  if (cpInput.value) $("#heroCpResult").innerHTML = zoneSummary(cpInput.value);
+  if (cpInput.value) $("#heroCpResult").innerHTML = deliverySummary(cpInput.value);
   cpInput.addEventListener("input", () => { cpInput.value = cpInput.value.replace(/\D/g, "").slice(0, 5); });
   $("#heroCp").addEventListener("submit", (e) => {
     e.preventDefault();
-    $("#heroCpResult").innerHTML = zoneSummary(cpInput.value) || '<p class="error">Saisissez un code postal à 5 chiffres.</p>';
+    $("#heroCpResult").innerHTML = deliverySummary(cpInput.value) || '<p class="error">Saisissez un code postal à 5 chiffres.</p>';
     if (deptOf(cpInput.value)) { setCp(cpInput.value); renderTeaser(); }
   });
 

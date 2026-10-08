@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Livraison du bois de chauffage · Bois & Braise</title>
-  <meta name="description" content="Zones de livraison, tarifs, dates de tournée et conditions d'accès pour la livraison de bois de chauffage. Palettes par transporteur dans toute la France.">
+  <title>Livraison du bois de chauffage sur palette · Bois & Braise</title>
+  <meta name="description" content="Livraison du bois de chauffage sur palette partout en France métropolitaine, sous 7 à 12 jours. Tarifs, délais et conditions.">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,44 +14,51 @@
 <body data-page="livraison">
   <main id="main" class="container page">
     <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>Livraison</span></nav>
-    <h1>Livraison</h1>
-    <p class="lead">Nos camions livrent le bois en vrac à jour fixe dans un rayon d'environ 130 km autour de <span data-shop="depotLabel"></span>. Au-delà, nous l'expédions sur palette filmée dans toute la France métropolitaine.</p>
+    <h1>Livraison sur palette</h1>
+    <p class="lead">Votre bois est rangé et filmé sur palette, puis livré par transporteur partout en France métropolitaine, <strong id="lDelay"></strong> après réception de votre paiement.</p>
 
     <section class="delivery-check panel">
       <form id="dCp" class="cp-check cp-check--light">
         <label for="dCpInput">Votre code postal</label>
         <div class="cp-check__row">
-          <input id="dCpInput" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="ex. 41000">
-          <button class="btn btn--primary" type="submit">Voir ma livraison</button>
+          <input id="dCpInput" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="ex. 69000">
+          <button class="btn btn--primary" type="submit">Vérifier</button>
         </div>
       </form>
       <div id="dResult" class="cp-result" role="status"></div>
     </section>
 
     <section class="section section--tight">
-      <h2>Tarifs par zone</h2>
+      <h2>Tarif</h2>
       <div class="zone-grid" id="zoneGrid"></div>
     </section>
 
     <section class="section section--tight">
-      <div class="section__head"><h2>Prochaines tournées</h2><p class="small muted">Deux semaines à venir</p></div>
-      <div class="table-wrap"><table class="table cal" id="calendar"></table></div>
+      <h2>Combien de palettes pour ma commande ?</h2>
+      <p class="muted">Faites glisser pour voir le nombre de palettes et le prix de livraison selon le volume.</p>
+      <div class="panel pallet-sim">
+        <label for="palRange">Volume commandé : <strong id="palOut"></strong></label>
+        <input type="range" id="palRange" min="1" max="20" step="1" value="4">
+        <div class="pallet-row" id="palRow" aria-hidden="true"></div>
+        <p id="palText"></p>
+      </div>
     </section>
 
     <section class="section section--tight prose">
-      <h2>Bien préparer la livraison</h2>
+      <h2>Comment se passe la livraison</h2>
       <ul>
-        <li><strong>Accès :</strong> notre camion benne mesure 2,5 m de large et 3,2 m de haut, pour 3,5 t en charge. Prévenez-nous d'un chemin étroit, d'une pente ou d'un terrain meuble.</li>
-        <li><strong>Déchargement :</strong> le bois en vrac est basculé au sol, au plus près de votre abri si l'accès le permet. Prévoyez une zone propre et plane.</li>
-        <li><strong>Présence :</strong> elle n'est pas obligatoire si le paiement est déjà fait et le lieu de déchargement clairement indiqué.</li>
-        <li><strong>Palettes :</strong> livrées par hayon en bordure de propriété, sur rendez-vous fixé par le transporteur. Pas de consigne sur les palettes.</li>
-        <li><strong>Contrôle :</strong> vous pouvez mesurer l'humidité devant le chauffeur. Si le bois dépasse 20 %, refusez la livraison : elle ne vous sera pas facturée.</li>
+        <li><strong>Préparation :</strong> dès réception du paiement, le bois est rangé et filmé sur palette, avec le bon de livraison.</li>
+        <li><strong>Rendez-vous :</strong> le transporteur vous appelle pour convenir du jour. Indiquez un numéro de téléphone joignable lors de la commande.</li>
+        <li><strong>Déchargement :</strong> la palette est descendue au hayon et déposée en bordure de propriété, sur un sol plat et stable. Le transporteur ne la rentre pas chez vous.</li>
+        <li><strong>Accès :</strong> le camion porteur a besoin d'une voie carrossable. Prévenez-nous d'un chemin étroit, d'une forte pente ou d'un terrain meuble.</li>
+        <li><strong>Accessoires :</strong> allume-feu, bois d'allumage et accessoires voyagent sur la même palette que votre bois. Ils ne sont pas vendus seuls.</li>
+        <li><strong>Contrôle :</strong> vérifiez l'état de la palette devant le chauffeur et notez toute réserve sur le bon de livraison.</li>
       </ul>
     </section>
 
     <section class="section section--tight prose">
-      <h2>Retours et réclamations</h2>
-      <p>Pour les produits livrés en colis (allume-feu, accessoires), vous disposez de 14 jours après réception pour exercer votre droit de rétractation. Le bois livré en vrac, une fois déchargé et mélangé à votre stock, ne peut pas être repris : vérifiez-le à la livraison. En cas de souci de volume ou de qualité, <a href="contact.html">écrivez-nous</a> sous 48h avec une photo.</p>
+      <h2>Réclamations</h2>
+      <p>En cas de palette abîmée ou de souci de volume ou de qualité, notez vos réserves sur le bon de livraison et <a href="contact.html">écrivez-nous</a> sous 48h avec une photo.</p>
     </section>
   </main>
 

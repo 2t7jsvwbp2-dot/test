@@ -16,7 +16,7 @@
   const deadline = new Date(order.date);
   deadline.setDate(deadline.getDate() + pay.deadlineDays);
   const amount = order.total.toFixed(2).replace(".", ",");
-  const PAY_NAMES = { revolut: "Revolut", virement: "Virement bancaire", livraison: "À la livraison (chèque ou espèces)" };
+  const PAY_NAMES = { carte: "Carte bancaire", virement: "Virement instantané" };
 
   const copyRow = (label, value, raw = value) => `
     <div class="copy-row">
@@ -24,25 +24,24 @@
       <dd><span class="copy-row__value">${value ? escapeHtml(value) : cfg("")}</span>${value ? `<button type="button" class="copy-btn" data-copy="${escapeHtml(raw)}">Copier</button>` : ""}</dd>
     </div>`;
 
-  function revolutBlock() {
-    const r = pay.revolut;
+  function cardBlock() {
+    const c = pay.card;
     return `
       <div class="pay-box">
-        <h2><span class="pay-logo pay-logo--revolut" aria-hidden="true">R</span> Payer avec Revolut</h2>
+        <h2><span class="pay-logo pay-logo--card" aria-hidden="true">▭</span> Payer par carte bancaire</h2>
         <ol class="pay-steps">
-          <li>Ouvrez notre page de paiement Revolut avec le bouton ci-dessous.</li>
+          <li>Ouvrez notre page de paiement sécurisée avec le bouton ci-dessous.</li>
           <li>Saisissez le montant exact : <strong>${euro(order.total)}</strong>.</li>
-          <li>Indiquez la référence <strong>${escapeHtml(order.id)}</strong> dans la note du paiement.</li>
+          <li>Indiquez la référence <strong>${escapeHtml(order.id)}</strong> si la page vous la demande.</li>
         </ol>
         <dl class="copy-list">
           ${copyRow("Montant", euro(order.total), amount)}
           ${copyRow("Référence", order.id)}
-          ${copyRow("Bénéficiaire", r.tag)}
         </dl>
-        ${r.link
-          ? `<a class="btn btn--revolut btn--lg btn--block" href="${escapeHtml(r.link)}" target="_blank" rel="noopener">Payer ${euro(order.total)} avec Revolut</a>`
-          : `<p class="notice">Le lien de paiement Revolut n'est pas encore configuré (${cfg("")}).</p>`}
-        <p class="small muted">Pas d'application Revolut ? La page Revolut accepte aussi la carte bancaire.</p>
+        ${c.link
+          ? `<a class="btn btn--primary btn--lg btn--block" href="${escapeHtml(c.link)}" target="_blank" rel="noopener">Payer ${euro(order.total)} par carte</a>
+             <p class="small muted center">Page sécurisée : ${escapeHtml(c.link.replace(/^https?:\/\//, "").split("/")[0])}</p>`
+          : `<p class="notice">Le lien de paiement par carte n'est pas encore configuré (${cfg("")}).</p>`}
       </div>`;
   }
 
@@ -50,7 +49,7 @@
     const t = pay.transfer;
     return `
       <div class="pay-box">
-        <h2><span class="pay-logo pay-logo--virement" aria-hidden="true">€</span> Payer par virement</h2>
+        <h2><span class="pay-logo pay-logo--virement" aria-hidden="true">€</span> Payer par virement instantané</h2>
         <p>Indiquez <strong>impérativement la référence</strong> dans le libellé : c'est elle qui nous permet d'associer le paiement à votre commande.</p>
         <dl class="copy-list">
           ${copyRow("Titulaire", t.holder)}
@@ -60,16 +59,7 @@
           ${copyRow("Montant", euro(order.total), amount)}
           ${copyRow("Référence / libellé", order.id)}
         </dl>
-        <p class="small muted">Un virement instantané arrive en quelques secondes ; un virement classique en 1 à 2 jours ouvrés.</p>
-      </div>`;
-  }
-
-  function onDeliveryBlock() {
-    return `
-      <div class="pay-box">
-        <h2><span class="pay-logo pay-logo--livraison" aria-hidden="true">✓</span> Paiement ${order.shippingId === "retrait" ? "au dépôt" : "à la livraison"}</h2>
-        <p>Préparez <strong>${euro(order.total)}</strong> par chèque à l'ordre de ${cfg(SHOP.legalName)}, ou en espèces (1 000 € maximum). Rien à payer d'ici là.</p>
-        <dl class="copy-list">${copyRow("Montant", euro(order.total), amount)}${copyRow("Référence", order.id)}</dl>
+        <p class="small muted">Choisissez « virement instantané » dans l'application de votre banque : il arrive en quelques secondes et votre commande part plus vite.</p>
       </div>`;
   }
 
@@ -77,9 +67,8 @@
     const c = order.customer;
     const mailBody = encodeURIComponent(order.text);
     const mailSubject = encodeURIComponent(`Commande ${order.id}`);
-    const pickup = order.shippingId === "retrait";
-    const prepaid = order.payment !== "livraison";
-    const others = ["revolut", "virement"].filter((id) => id !== order.payment && (id === "revolut" ? pay.revolut.enabled : pay.transfer.enabled));
+    const w = deliveryWindow(new Date(order.date));
+    const card = order.payment === "carte";
 
     root.innerHTML = `
       <div class="confirm-head">
@@ -87,7 +76,7 @@
         <div>
           <h1>Merci ${escapeHtml(c.firstname)}, votre commande est enregistrée</h1>
           <p>Commande <strong>${escapeHtml(order.id)}</strong> · ${new Date(order.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} ·
-            <span class="status status--pending">${prepaid ? "En attente de paiement" : "Paiement à la livraison"}</span></p>
+            <span class="status status--pending">En attente de paiement</span></p>
         </div>
       </div>
 
@@ -103,16 +92,16 @@
 
       <div class="confirm-grid">
         <div class="confirm-pay">
-          ${order.payment === "revolut" ? revolutBlock() : order.payment === "virement" ? transferBlock() : onDeliveryBlock()}
-          ${prepaid ? `<p class="deadline">Paiement à effectuer avant le <strong>${deadline.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}</strong>${order.deliveryDate ? ` et au plus tard la veille de la ${pickup ? "date de retrait" : "livraison"}` : ""}. Passé ce délai, la commande est annulée.</p>` : ""}
-          ${others.map((id) => `<button type="button" class="link" data-switch="${id}">Je préfère payer ${id === "revolut" ? "avec Revolut" : "par virement bancaire"}</button>`).join(" · ")}
+          ${card ? cardBlock() : transferBlock()}
+          ${card && pay.transfer.enabled ? `<details class="pay-alt"><summary>Vous préférez payer par virement instantané ?</summary>${transferBlock()}<button type="button" class="link" data-switch="virement">Je choisis le virement instantané</button></details>` : ""}
+          ${!card && pay.card.enabled ? `<button type="button" class="link" data-switch="carte">Je préfère payer par carte bancaire</button>` : ""}
+          <p class="deadline">Paiement à effectuer avant le <strong>${deadline.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}</strong>. Passé ce délai, la commande est annulée.</p>
 
           <h2 class="h3">Et ensuite ?</h2>
           <ol class="timeline">
-            ${prepaid ? `<li class="is-current"><strong>Paiement</strong><span>Vous réglez ${euro(order.total)} avec la référence ${escapeHtml(order.id)}.</span></li>` : ""}
-            <li${prepaid ? "" : ' class="is-current"'}><strong>Confirmation</strong><span>Nous vous confirmons ${order.deliveryDate ? "la date" : "l'expédition"} par e-mail ou SMS.</span></li>
-            <li><strong>${pickup ? "Retrait au dépôt" : order.shippingId === "camion" ? "Livraison par notre camion" : "Livraison"}</strong>
-              <span>${order.deliveryDate ? `${fmtDate(order.deliveryDate)}, ${escapeHtml(order.slot)}. ${pickup ? "" : "Le chauffeur vous appelle la veille."}` : escapeHtml(order.shippingName)}</span></li>
+            <li class="is-current"><strong>Paiement</strong><span>Vous réglez ${euro(order.total)} avec la référence ${escapeHtml(order.id)}.</span></li>
+            <li><strong>Préparation de ${plural(order.pallets || 1, "palette")}</strong><span>Dès réception du paiement, votre bois est rangé et filmé sur palette.</span></li>
+            <li><strong>Livraison sous ${delayText()}</strong><span>Le transporteur vous appelle au ${escapeHtml(c.phone)} pour fixer le rendez-vous, en principe entre le ${fmtDate(w.from, { day: "numeric", month: "long" })} et le ${fmtDate(w.to, { day: "numeric", month: "long" })}.</span></li>
           </ol>
         </div>
 
@@ -131,14 +120,13 @@
           <dl class="totals">
             <div><dt>Sous-total</dt><dd>${euro(order.subtotal)}</dd></div>
             ${order.discount ? `<div class="totals__discount"><dt>Remise ${escapeHtml(order.promo)}</dt><dd>−${euro(order.discount)}</dd></div>` : ""}
-            ${order.pickupDiscount ? `<div class="totals__discount"><dt>Remise retrait</dt><dd>−${euro(order.pickupDiscount)}</dd></div>` : ""}
             <div><dt>${escapeHtml(order.shippingName)}</dt><dd>${order.shipping === 0 ? "Offerte" : euro(order.shipping)}</dd></div>
             <div class="totals__grand"><dt>Total TTC</dt><dd>${euro(order.total)}</dd></div>
             <div class="totals__vat"><dt>dont TVA</dt><dd>${euro(order.vat)}</dd></div>
           </dl>
-          <h3 class="h4">${pickup ? "Retrait" : "Livraison à"}</h3>
+          <h3 class="h4">Livraison à</h3>
           <p class="small">${escapeHtml(c.firstname)} ${escapeHtml(c.lastname)}<br>
-            ${pickup ? cfg(SHOP.address) : `${escapeHtml(c.address)}${c.address2 ? "<br>" + escapeHtml(c.address2) : ""}<br>${escapeHtml(c.zip)} ${escapeHtml(c.city)}`}<br>
+            ${escapeHtml(c.address)}${c.address2 ? "<br>" + escapeHtml(c.address2) : ""}<br>${escapeHtml(c.zip)} ${escapeHtml(c.city)}<br>
             ${escapeHtml(c.phone)}</p>
           <p class="small muted">Paiement : ${PAY_NAMES[order.payment]}</p>
         </aside>

@@ -11,16 +11,17 @@
 
   // Panier hypothétique : le panier actuel + la sélection, pour estimer la livraison réelle
   function deliveryHint() {
-    const cp = store.get("cp", "");
-    if (!deptOf(cp)) return `<p class="small"><button type="button" class="link" data-open-cp>Indiquez votre code postal</button> pour voir le prix et les dates de livraison.</p>`;
     const opts = { len: state.len, dry: state.dry };
     const extra = { product: p, opts, unit: unitPrice(p, opts), qty: state.qty, line: unitPrice(p, opts) * state.qty, st: p.st * state.qty };
-    const d = deliveryOptions(cp, [...Cart.items().filter((i) => i.key !== itemKey(p.id, opts)), extra]);
+    const items = [...Cart.items().filter((i) => i.key !== itemKey(p.id, opts)), extra];
+    const d = deliveryOptions(store.get("cp", ""), items);
     const m = d.methods[0];
-    if (!d.loc.ok) return `<p class="small">Pas de livraison au ${escapeHtml(cp)}. Retrait possible au dépôt. <button type="button" class="link" data-open-cp>Changer</button></p>`;
-    return `<p class="small"><strong>Livraison au ${escapeHtml(cp)}</strong> <button type="button" class="link small" data-open-cp>changer</button><br>
-      ${escapeHtml(m.name)} : <strong>${m.fee ? euro(m.fee) : "offerte"}</strong>${m.dates ? `, dès le ${fmtDate(m.dates[0])}` : ` · ${escapeHtml(m.delay)}`}.
-      ${m.note ? `<span class="muted">${escapeHtml(m.note)}.</span>` : ""}</p>`;
+    if (p.addon && !items.some((i) => !i.product.addon))
+      return `<p class="small addon-note">Vendu uniquement en complément d'une commande de bois. <a href="catalogue.html?categorie=buches">Choisir du bois</a></p>`;
+    if (deptOf(store.get("cp", "")) && !d.loc.ok)
+      return `<p class="small">Nous ne livrons pas ce département. <button type="button" class="link small" data-open-cp>Changer de code postal</button></p>`;
+    return `<p class="small"><strong>${escapeHtml(m.name)}</strong> : ${plural(m.pallets, "palette")}, ${euro(m.fee)} pour ${Cart.items().length ? "l'ensemble de votre panier" : "cette quantité"}.<br>
+      <span class="muted">Livraison sous ${delayText()} partout en France métropolitaine.</span></p>`;
   }
 
   function volumeViz() {
@@ -107,7 +108,7 @@
             </fieldset>` : `
             <ul class="pdp__perks">
               ${p.len ? `<li>Longueur ${p.len} cm</li>` : ""}${p.dry ? `<li>${dryingById(p.dry).name} (${dryingById(p.dry).humidity} d'humidité)</li>` : ""}
-              <li>${p.ship === "truck" ? "Livré avec votre bois, ou sur palette" : "Expédié en colis, ou livré avec votre bois"}</li>
+              <li>${p.addon ? "En complément d'une commande de bois, livré sur la même palette" : `Livré sur palette sous ${delayText()}`}</li>
             </ul>`}
 
           <div class="pdp__buy">
@@ -141,14 +142,14 @@
             <tr><th>Masse</th><td>≈ ${ess.kg} kg par stère</td></tr>
             <tr><th>Humidité</th><td>${DRYINGS.map((d) => `${d.name} : ${d.humidity}`).join(" · ")}</td></tr>
             <tr><th>Conversion</th><td>${LENGTHS.map((l) => `${l.label} : ${num(l.factor)} m³`).join(" · ")} par stère</td></tr>
-            <tr><th>Livraison</th><td>En vrac, déchargé par benne basculante</td></tr>`
+            <tr><th>Livraison</th><td>Rangé et filmé sur palette (${plural(SHOP.delivery.pallet, "stère")} maximum par palette), sous ${delayText()}</td></tr>`
           : `<tr><th>Description</th><td>${escapeHtml(p.text)}</td></tr><tr><th>Conditionnement</th><td>${escapeHtml(p.unit)}</td></tr>`}
           <tr><th>TVA</th><td>${SHOP.vatRate} % incluse</td></tr>
         </tbody></table></div>
       </div>
       <div class="tab-panel" role="tabpanel" id="tab-livraison" aria-labelledby="t2" hidden>
-        <p>Dans nos zones de tournée, le bois est livré par nos camions à jour fixe, déchargé au plus près de votre abri si l'accès le permet (porte de 2,5 m minimum, sol stable). Ailleurs en France métropolitaine, il part sur palette par transporteur.</p>
-        <p><a href="livraison.html">Voir les zones, les tarifs et les prochaines dates</a></p>
+        <p>Votre bois est rangé et filmé sur palette, puis livré par transporteur partout en France métropolitaine (hors Corse) <strong>sous ${delayText()}</strong> après réception du paiement. Le transporteur vous appelle pour fixer le rendez-vous et dépose la palette au hayon, en bordure de propriété.</p>
+        <p>${euro(SHOP.delivery.feePerPallet)} par palette de ${plural(SHOP.delivery.pallet, "stère")} maximum. <a href="livraison.html">Tout savoir sur la livraison</a></p>
       </div>
       <div class="tab-panel" role="tabpanel" id="tab-conseils" aria-labelledby="t3" hidden>
         <ul class="prose">

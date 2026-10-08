@@ -104,7 +104,9 @@ const Cart = {
     else lines.push({ key, id, len: opts.len || null, dry: opts.dry || null, qty: next });
     this.save(lines);
     const what = p.unit === "stère" ? `${plural(qty, "stère")} de ${essenceById(p.essence).name.toLowerCase()}` : p.name;
-    toast(`${what} ajouté au panier`, { href: "panier.html", label: "Voir le panier" });
+    const needWood = p.addon && !lines.some((l) => !productById(l.id).addon);
+    toast(needWood ? `${what} ajouté. Ajoutez du bois pour pouvoir commander.` : `${what} ajouté au panier`,
+      needWood ? { href: "catalogue.html?categorie=buches", label: "Choisir du bois" } : { href: "panier.html", label: "Voir le panier" });
   },
   setQty(key, qty) {
     const lines = this.raw();
@@ -129,104 +131,76 @@ function getPromo() {
 // ---------------------------------------------------------------------
 // Livraison
 // ---------------------------------------------------------------------
-const DAY_NAMES = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
-
 function deptOf(cp) {
   return /^\d{5}$/.test(cp || "") ? cp.slice(0, 2) : null;
 }
 
-// Renvoie { ok, dept, zone, reason }
+// Renvoie { ok, dept, reason }
 function locate(cp) {
   const dept = deptOf(cp);
   if (!dept) return { ok: false, reason: "invalid" };
   if (SHOP.delivery.excluded.includes(dept)) return { ok: false, dept, reason: "excluded" };
-  const zone = SHOP.delivery.zones.find((z) => z.depts.includes(dept)) || null;
-  return { ok: true, dept, zone };
-}
-
-// Prochaines dates possibles pour une tournée (jours 1 à 6), à partir d'un délai minimum
-function nextDates(days, leadDays, count = 8) {
-  const out = [];
-  const d = new Date();
-  d.setHours(12, 0, 0, 0);
-  d.setDate(d.getDate() + leadDays);
-  while (out.length < count) {
-    if (days.includes(d.getDay())) out.push(d.toISOString().slice(0, 10));
-    d.setDate(d.getDate() + 1);
-  }
-  return out;
+  return { ok: true, dept };
 }
 
 const fmtDate = (iso, opts = { weekday: "long", day: "numeric", month: "long" }) =>
   new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", opts);
 
-// Modes de livraison possibles pour un code postal et un panier
+// Fenêtre de livraison estimée à partir d'aujourd'hui (ou d'une date de commande)
+function deliveryWindow(from = new Date()) {
+  const d = (n) => { const x = new Date(from); x.setHours(12, 0, 0, 0); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); };
+  return { from: d(SHOP.delivery.minDays), to: d(SHOP.delivery.maxDays) };
+}
+const delayText = () => `${SHOP.delivery.minDays} à ${SHOP.delivery.maxDays} jours`;
+
+// Nombre de palettes : les accessoires voyagent avec le bois
+function palletCount(st) {
+  return Math.max(1, Math.ceil(round2(st) / SHOP.delivery.pallet - 1e-9));
+}
+
+// Une commande doit contenir du bois : les accessoires ne sont vendus qu'en complément.
+function cartIssue(items = Cart.items()) {
+  if (!items.length) return "";
+  const wood = items.filter((i) => !i.product.addon);
+  if (!wood.length) return "Les accessoires sont vendus uniquement en complément d'une commande de bois. Ajoutez du bois à votre panier pour commander.";
+  const woodTotal = wood.reduce((s, i) => s + i.line, 0);
+  if (SHOP.minOrderAmount && woodTotal < SHOP.minOrderAmount)
+    return `Commande minimum : ${euro(SHOP.minOrderAmount)} de bois (actuellement ${euro(woodTotal)}).`;
+  return "";
+}
+
+// Livraison unique : sur palette par transporteur
 function deliveryOptions(cp, items = Cart.items()) {
   const D = SHOP.delivery;
   const st = round2(items.reduce((s, i) => s + i.st, 0));
-  const truck = items.some((i) => i.product.ship === "truck");
-  const goods = items.reduce((s, i) => s + i.line, 0);
+  const pallets = palletCount(st);
   const loc = locate(cp);
-  const methods = [];
-
-  if (loc.ok) {
-    if (!truck) {
-      methods.push({
-        id: "colis", name: D.parcel.name, fee: goods >= D.parcel.freeFrom ? 0 : D.parcel.fee,
-        delay: `${D.parcel.leadDays} à ${D.parcel.leadDays + 2} jours ouvrés`, dates: null, payOnDelivery: false,
-        note: goods >= D.parcel.freeFrom ? "" : `Offert dès ${euro(D.parcel.freeFrom)} d'achats`,
-      });
-    } else if (loc.zone) {
-      const z = loc.zone;
-      const free = st >= z.freeFromSteres;
-      methods.push({
-        id: "camion", name: `Livraison par nos soins · ${z.name}`, fee: free ? 0 : z.fee,
-        delay: `Tournées le ${z.days.map((d) => DAY_NAMES[d]).join(", le ")}`,
-        dates: nextDates(z.days, z.leadDays), payOnDelivery: true,
-        note: free ? "Livraison offerte pour votre volume" : `Offerte dès ${plural(z.freeFromSteres, "stère")}`,
-        zone: z,
-      });
-    } else {
-      const pallets = Math.max(1, Math.ceil(st / D.carrier.pallet));
-      methods.push({
-        id: "transporteur", name: D.carrier.name, fee: pallets * D.carrier.feePerPallet,
-        delay: `Livraison en ${D.carrier.leadDays} à ${D.carrier.leadDays + 5} jours ouvrés, sur rendez-vous`, dates: null, payOnDelivery: false,
-        note: `${plural(pallets, "palette")} · ${euro(D.carrier.feePerPallet)} par palette, déchargement en bordure de propriété`,
-      });
-    }
-  }
-  methods.push({
-    id: "retrait", name: `${D.pickup.name}`, fee: 0,
-    delay: "Du lundi au samedi, sur rendez-vous", dates: nextDates(D.pickup.days, D.pickup.leadDays), payOnDelivery: true,
-    note: D.pickup.discountPercent && truck ? `${D.pickup.discountPercent} % de remise sur le bois emporté` : "",
-  });
-  return { loc, methods, st, truck };
+  const method = {
+    id: "palette", name: D.name, fee: pallets * D.feePerPallet, pallets,
+    delay: `Livraison sous ${delayText()}, sur rendez-vous`,
+    note: `${plural(pallets, "palette")} · ${euro(D.feePerPallet)} par palette`,
+  };
+  return { loc, methods: [method], st, pallets };
 }
 
-function computeTotals({ cp = store.get("cp", ""), methodId = store.get("method", "") } = {}) {
+function computeTotals({ cp = store.get("cp", "") } = {}) {
   const items = Cart.items();
   const subtotal = round2(items.reduce((s, i) => s + i.line, 0));
   const promo = getPromo();
   const discount = promo ? round2((subtotal * promo.percent) / 100) : 0;
   const del = deliveryOptions(cp, items);
-  const method = del.methods.find((m) => m.id === methodId) || del.methods[0];
-  let pickupDiscount = 0;
-  if (method.id === "retrait" && SHOP.delivery.pickup.discountPercent) {
-    const wood = items.filter((i) => i.product.ship === "truck").reduce((s, i) => s + i.line, 0);
-    pickupDiscount = round2(((wood - (wood / (subtotal || 1)) * discount) * SHOP.delivery.pickup.discountPercent) / 100);
-  }
+  const method = del.methods[0];
   const shipping = items.length ? method.fee : 0;
-  const total = round2(subtotal - discount - pickupDiscount + shipping);
+  const total = round2(subtotal - discount + shipping);
   const vat = round2(total - total / (1 + SHOP.vatRate / 100));
-  return { items, subtotal, promo, discount, pickupDiscount, shipping, method, del, total, vat, st: del.st };
+  return { items, subtotal, promo, discount, shipping, method, del, total, vat, st: del.st, issue: cartIssue(items) };
 }
 
-function totalsHtml(t, { cpKnown = true } = {}) {
+function totalsHtml(t) {
   return `
     <div><dt>Sous-total</dt><dd>${euro(t.subtotal)}</dd></div>
     ${t.promo ? `<div class="totals__discount"><dt>Remise ${escapeHtml(t.promo.code)}</dt><dd>−${euro(t.discount)}</dd></div>` : ""}
-    ${t.pickupDiscount ? `<div class="totals__discount"><dt>Remise retrait au dépôt</dt><dd>−${euro(t.pickupDiscount)}</dd></div>` : ""}
-    <div><dt>Livraison</dt><dd>${!t.items.length ? "—" : !cpKnown && t.method.id !== "retrait" ? "selon code postal" : t.shipping === 0 ? "Offerte" : euro(t.shipping)}</dd></div>
+    <div><dt>Livraison <span class="muted small">(${plural(t.method.pallets, "palette")})</span></dt><dd>${t.items.length ? euro(t.shipping) : "—"}</dd></div>
     <div class="totals__grand"><dt>Total TTC</dt><dd>${euro(t.total)}</dd></div>
     <div class="totals__vat"><dt>dont TVA ${SHOP.vatRate} %</dt><dd>${euro(t.vat)}</dd></div>`;
 }
@@ -360,6 +334,8 @@ const ACCESSORY_ART = {
 };
 
 function productArt(p, opts = {}) {
+  if (typeof PHOTOS !== "undefined" && PHOTOS[p.id])
+    return `<img class="art-photo" src="${escapeHtml(PHOTOS[p.id])}" alt="${escapeHtml(p.name)}" loading="lazy" width="1200" height="900">`;
   const ess = essenceById(p.essence) || ESSENCES[4];
   if (p.type === "config") {
     const len = opts.len || 33;
@@ -402,6 +378,7 @@ function productCard(p) {
         ? `<p class="card-product__meta">${p.lengths.map((l) => lengthByCm(l).label).join(" · ")} · sec air ou four</p>
            <div class="card-product__meters"><span>Chaleur</span>${meter(Math.round((ess.kwh - 1500) / 140), "Pouvoir calorifique")}<span>Braises</span>${meter(ess.embers, "Braises")}</div>`
         : `<p class="card-product__meta">${escapeHtml(optsLabel(p) || p.text.split(".")[0])}</p>`}
+      ${p.addon ? '<p class="addon-note">En complément d\'une commande de bois</p>' : ""}
       <div class="card-product__foot">
         <div class="price">${isConfig ? '<span class="price__from">dès</span>' : ""}<strong>${euro(fromPrice(p))}</strong><span class="price__unit">/ ${p.unit}</span></div>
         ${isConfig
@@ -436,7 +413,7 @@ function renderLayout() {
 
   document.body.insertAdjacentHTML("afterbegin", `
     <a class="skip" href="#main">Aller au contenu</a>
-    <div class="topbar">Bois sec garanti &lt; 20 % d'humidité · Livraison en camion dans nos zones, palettes partout en France · TVA ${SHOP.vatRate} %</div>
+    <div class="topbar">Bois sec garanti &lt; 20 % d'humidité · Livraison sur palette partout en France sous ${delayText()} · TVA ${SHOP.vatRate} %</div>
     <header class="header">
       <div class="container header__row">
         ${logoHtml()}
@@ -462,8 +439,8 @@ function renderLayout() {
       <div class="container reassurance__grid">
         <div><strong>Volume honnête</strong><span>Prix au stère et au m³ apparent, sans surprise</span></div>
         <div><strong>Bois sec mesuré</strong><span>Humidité contrôlée à l'humidimètre avant chaque livraison</span></div>
-        <div><strong>Forêts gérées durablement</strong><span>Coupes d'éclaircie de forêts françaises</span></div>
-        <div><strong>Paiement souple</strong><span>Revolut, virement ou au chauffeur</span></div>
+        <div><strong>Livré sur palette</strong><span>Partout en France métropolitaine, sous ${delayText()}</span></div>
+        <div><strong>Paiement sécurisé</strong><span>Carte bancaire ou virement instantané</span></div>
       </div>
     </section>
     <footer class="footer">
@@ -471,7 +448,7 @@ function renderLayout() {
         <div class="footer__brand">
           ${logoHtml(true)}
           <p>Bois de chauffage de feuillus durs, fendu, séché et livré chez vous. Granulés, bûches densifiées et accessoires.</p>
-          <p class="footer__pay"><span>Revolut</span><span>Virement SEPA</span>${SHOP.payment.onDelivery.enabled ? "<span>Chèque ou espèces à la livraison</span>" : ""}</p>
+          <p class="footer__pay"><span>Carte bancaire</span><span>Virement instantané</span><span>Livraison sur palette</span></p>
         </div>
         <div>
           <h2>Boutique</h2>
@@ -482,7 +459,7 @@ function renderLayout() {
           <a href="calculateur.html">Calculer mes besoins</a>
           <a href="calculateur.html#convertisseur">Stère, m³ apparent : convertir</a>
           <a href="essences.html">Guide des essences</a>
-          <a href="livraison.html">Zones et dates de livraison</a>
+          <a href="livraison.html">Livraison sur palette</a>
           <a href="faq.html">Questions fréquentes</a>
         </div>
         <div>
@@ -501,7 +478,7 @@ function renderLayout() {
     <dialog class="modal modal--sm" id="cpDialog" aria-labelledby="cpTitle">
       <form method="dialog" class="cp-form" id="cpForm">
         <h2 id="cpTitle">Où livrer votre bois ?</h2>
-        <p class="muted">Indiquez votre code postal : nous affichons le mode de livraison, son prix et les prochaines dates de tournée.</p>
+        <p class="muted">Indiquez votre code postal : nous vérifions que nous livrons chez vous et indiquons le délai.</p>
         <label for="cpInput">Code postal</label>
         <input id="cpInput" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="ex. 45000">
         <div id="cpResult" class="cp-result" role="status"></div>
@@ -521,12 +498,12 @@ function renderLayout() {
   const dlg = $("#cpDialog");
   $("#cpChip").addEventListener("click", () => {
     $("#cpInput").value = store.get("cp", "");
-    $("#cpResult").innerHTML = zoneSummary($("#cpInput").value);
+    $("#cpResult").innerHTML = deliverySummary($("#cpInput").value);
     dlg.showModal();
   });
   $("#cpInput").addEventListener("input", (e) => {
     e.target.value = e.target.value.replace(/\D/g, "").slice(0, 5);
-    $("#cpResult").innerHTML = e.target.value.length === 5 ? zoneSummary(e.target.value) : "";
+    $("#cpResult").innerHTML = e.target.value.length === 5 ? deliverySummary(e.target.value) : "";
   });
   $("#cpSave").addEventListener("click", (e) => {
     const v = $("#cpInput").value;
@@ -551,24 +528,16 @@ function setCp(cp) {
 }
 
 // Résumé de livraison pour un code postal (dialogue, accueil, page livraison)
-function zoneSummary(cp) {
+function deliverySummary(cp) {
   if (!cp) return "";
   const loc = locate(cp);
   if (loc.reason === "invalid") return '<p class="error">Le code postal doit contenir 5 chiffres.</p>';
-  if (!loc.ok) return `<p class="cp-result__bad"><strong>Nous ne livrons pas ce département.</strong> La Corse et l'outre-mer ne sont pas desservis. Vous pouvez retirer votre commande au dépôt.</p>`;
-  if (loc.zone) {
-    const z = loc.zone;
-    const dates = nextDates(z.days, z.leadDays, 3);
-    return `<div class="cp-result__ok">
-      <p><strong>${escapeHtml(z.name)}</strong> : livraison par nos camions, ${z.fee ? `${euro(z.fee)}, offerte dès ${plural(z.freeFromSteres, "stère")}` : "offerte"}.</p>
-      <p class="small">Prochaines tournées : ${dates.map((d) => `<span class="date-pill">${fmtDate(d, { weekday: "short", day: "numeric", month: "short" })}</span>`).join(" ")}</p>
-      ${SHOP.payment.onDelivery.enabled ? '<p class="small muted">Paiement possible au chauffeur, par chèque ou en espèces.</p>' : ""}
-    </div>`;
-  }
-  const C = SHOP.delivery.carrier;
-  return `<div class="cp-result__ok cp-result__ok--far">
-    <p><strong>Hors de nos tournées</strong> : livraison sur palette par transporteur, ${euro(C.feePerPallet)} par palette de ${plural(C.pallet, "stère")} maximum.</p>
-    <p class="small">Délai : ${C.leadDays} à ${C.leadDays + 5} jours ouvrés, sur rendez-vous. Petits colis (allume-feu, accessoires) en ${escapeHtml(SHOP.delivery.parcel.name)}.</p>
+  if (!loc.ok) return `<p class="cp-result__bad"><strong>Nous ne livrons pas ce département.</strong> La Corse et l'outre-mer ne sont pas desservis.</p>`;
+  const D = SHOP.delivery;
+  const w = deliveryWindow();
+  return `<div class="cp-result__ok">
+    <p><strong>Nous livrons au ${escapeHtml(cp)}</strong> : sur palette par transporteur, ${euro(D.feePerPallet)} par palette de ${plural(D.pallet, "stère")} maximum.</p>
+    <p class="small">Livraison sous ${delayText()} : pour une commande payée aujourd'hui, entre le ${fmtDate(w.from, { day: "numeric", month: "long" })} et le ${fmtDate(w.to, { day: "numeric", month: "long" })}.</p>
   </div>`;
 }
 
@@ -576,8 +545,7 @@ function renderCpChip() {
   const chip = $("#cpChip");
   if (!chip) return;
   const cp = store.get("cp", "");
-  const loc = locate(cp);
-  chip.innerHTML = `${ICON.truck}<span>${cp ? `${escapeHtml(cp)}${loc.zone ? ` · ${loc.zone.id.replace("z", "Zone ")}` : ""}` : "Code postal"}</span>`;
+  chip.innerHTML = `${ICON.truck}<span>${cp ? escapeHtml(cp) : "Code postal"}</span>`;
   chip.classList.toggle("cp-chip--set", !!cp);
   chip.setAttribute("aria-label", cp ? `Livraison au ${cp}, modifier` : "Indiquer mon code postal de livraison");
 }
