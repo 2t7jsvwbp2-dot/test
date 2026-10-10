@@ -127,7 +127,7 @@
     const spawn = (init) => ({
       x: Math.random() * w, y: init ? Math.random() * h : h + 10,
       r: 0.6 + Math.random() * 2.2, vy: 0.3 + Math.random() * 0.9, vx: (Math.random() - 0.5) * 0.4,
-      life: 0.4 + Math.random() * 0.6, hue: 20 + Math.random() * 25,
+      life: 0.4 + Math.random() * 0.6, hue: 32 + Math.random() * 16,
     });
     let visible = true;
     new IntersectionObserver(([en]) => (visible = en.isIntersecting)).observe(canvas);

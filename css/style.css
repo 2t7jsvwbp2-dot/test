@@ -2,9 +2,10 @@
    Le Stère d’Or — feuille de style
    ===================================================================== */
 :root {
-  --ember: #b4491a;
-  --ember-dark: #8f3612;
-  --ember-soft: #fbeadd;
+  /* Couleurs du logo : brun foncé, or, crème */
+  --ember: #8a5f12;        /* or foncé : liens, accents sur fond clair */
+  --ember-dark: #6e4b0c;
+  --ember-soft: #f7ecd2;
   --flame: #e0b04a;
   --gold: #d9a640;
   --gold-light: #f3d27a;
@@ -13,7 +14,7 @@
   --ink: #241a14;
   --muted: #6b5d52;
   --line: #e7ddd0;
-  --bg: #fffdf9;
+  --bg: #fdf9f2;
   --bg-alt: #f6efe4;
   --cream: #f4ecdf;
   --forest: #2f5d3a;
@@ -26,7 +27,7 @@
   --revolut: #0a0a0a;
   --radius: 12px;
   --shadow: 0 10px 30px rgba(36, 25, 19, .10);
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-display: "Merriweather", Georgia, "Times New Roman", serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --art-bg: #f4ecdf;
   color-scheme: light;
@@ -73,8 +74,8 @@ p { margin: 0 0 1em; }
 }
 .btn:active:not(:disabled) { transform: translateY(1px); }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
-.btn--primary { background: var(--ember); color: #fff; box-shadow: 0 4px 14px rgba(180, 73, 26, .25); }
-.btn--primary:hover:not(:disabled) { background: var(--ember-dark); color: #fff; }
+.btn--primary { background: linear-gradient(180deg, #e8bf5c, #cf9a35); color: var(--charcoal); box-shadow: 0 4px 14px rgba(185, 134, 44, .3), inset 0 1px 0 rgba(255, 255, 255, .35); }
+.btn--primary:hover:not(:disabled) { background: linear-gradient(180deg, #dcae45, #b9862c); color: var(--charcoal); }
 .btn--ghost { background: #fff; border-color: var(--line); color: var(--ink); }
 .btn--ghost:hover { border-color: var(--ember); color: var(--ember); }
 .btn--revolut { background: var(--revolut); color: #fff; }
@@ -117,8 +118,8 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 }
 .seg__btn small { font-size: .72rem; font-weight: 500; color: var(--muted); }
 .seg__btn:hover { border-color: var(--ember); }
-.seg__btn[aria-pressed="true"] { background: var(--ember); border-color: var(--ember); color: #fff; }
-.seg__btn[aria-pressed="true"] small { color: #ffe3cf; }
+.seg__btn[aria-pressed="true"] { background: var(--charcoal); border-color: var(--charcoal); color: var(--gold-light); }
+.seg__btn[aria-pressed="true"] small { color: #e6d3b8; }
 .seg--sm { display: flex; flex-wrap: wrap; }
 .seg--sm .seg__btn { padding: 6px 12px; font-size: .84rem; }
 
@@ -151,13 +152,13 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .icon-link:hover { background: var(--bg-alt); color: var(--ink); }
 .badge {
   position: absolute; top: 0; right: 4px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px;
-  background: var(--ember); color: #fff; font-size: .7rem; font-weight: 700; display: grid; place-items: center;
+  background: var(--gold); color: var(--charcoal); font-size: .7rem; font-weight: 700; display: grid; place-items: center;
 }
 .menu-btn { display: none; }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; overflow: hidden; color: #fff;
-  background: radial-gradient(700px 420px at 20% 110%, rgba(243, 156, 51, .35), transparent 70%), radial-gradient(900px 500px at 85% 30%, #4a2a18 0%, var(--charcoal) 70%); }
+  background: radial-gradient(700px 420px at 20% 110%, rgba(217, 166, 64, .28), transparent 70%), radial-gradient(900px 500px at 85% 30%, #3d2a1c 0%, var(--charcoal) 70%); }
 .hero[style*="background-image"] { background-size: cover; background-position: center; }
 .hero__embers { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero__grid { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 40px; padding-block: 56px 64px; }
@@ -414,7 +415,7 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .progress li::before { content: counter(p); width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--bg-alt); font-weight: 700; font-size: .78rem; }
 .progress li + li::after { order: -1; content: ""; width: 24px; height: 1px; background: var(--line); }
 .progress .is-current { color: var(--ink); font-weight: 600; }
-.progress .is-current::before { background: var(--ember); color: #fff; }
+.progress .is-current::before { background: var(--gold); color: var(--charcoal); }
 .progress .is-done::before { content: "✓"; background: var(--green-soft); color: var(--green); }
 .progress a { color: inherit; }
 
@@ -456,7 +457,7 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .date-card { display: grid; justify-items: center; gap: 0; border: 1px solid var(--line); background: #fff; border-radius: 12px; padding: 8px 4px; line-height: 1.15; font-size: .78rem; color: var(--muted); text-transform: capitalize; }
 .date-card strong { font-family: var(--font-display); font-size: 1.5rem; color: var(--ink); }
 .date-card:hover { border-color: var(--ember); }
-.date-card[aria-checked="true"] { background: var(--ember); border-color: var(--ember); color: #ffe3cf; }
+.date-card[aria-checked="true"] { background: var(--charcoal); border-color: var(--charcoal); color: #e6d3b8; }
 .date-card[aria-checked="true"] strong { color: #fff; }
 #slotSeg { margin-bottom: 8px; }
 .pay-logo { width: 36px; height: 36px; border-radius: 10px; display: inline-grid; place-items: center; font-weight: 800; font-size: 1.1rem; color: #fff; flex: none; font-family: var(--font-body); }
@@ -519,7 +520,7 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .result-card__facts div { background: var(--charcoal-2); border-radius: 12px; padding: 10px 12px; }
 .result-card__facts dt { font-size: .75rem; color: #cbb7a3; }
 .result-card__facts dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
-#rWarning { background: #5a2410; border-radius: 10px; padding: 10px 12px; }
+#rWarning { background: #4a3418; border-radius: 10px; padding: 10px 12px; }
 .bars { display: grid; gap: 10px; margin: 16px 0; }
 .bar { position: relative; display: grid; grid-template-columns: minmax(120px, 34%) 1fr auto; gap: 12px; align-items: center; font-size: .88rem; padding: 4px 0; outline-offset: 4px; border-radius: 6px; }
 .bar__label { color: var(--ink); }
