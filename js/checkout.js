@@ -65,7 +65,7 @@
   function newOrderId() {
     const d = new Date();
     const stamp = [d.getFullYear() % 100, d.getMonth() + 1, d.getDate()].map((n) => String(n).padStart(2, "0")).join("");
-    return `BB${stamp}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    return `SO${stamp}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
   }
 
   const PAY_NAMES = { carte: "Carte bancaire", virement: "Virement instantané" };

@@ -1,11 +1,13 @@
 /* =====================================================================
-   Bois & Braise — feuille de style
+   Le Stère d’Or — feuille de style
    ===================================================================== */
 :root {
   --ember: #b4491a;
   --ember-dark: #8f3612;
   --ember-soft: #fbeadd;
-  --flame: #f39c33;
+  --flame: #e0b04a;
+  --gold: #d9a640;
+  --gold-light: #f3d27a;
   --charcoal: #241913;
   --charcoal-2: #3a2a20;
   --ink: #241a14;
@@ -126,10 +128,10 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .header__row { display: flex; align-items: center; gap: 24px; height: 72px; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; flex: none; }
 .logo:hover { color: var(--ink); }
-.logo__text em { font-style: italic; color: var(--ember); font-weight: 600; }
-.logo__mark { width: 38px; height: 38px; border-radius: 11px; background: var(--charcoal); display: grid; place-items: center; }
+.logo__text em { font-style: italic; color: #b07a1c; font-weight: 700; }
+.logo__mark { width: 40px; height: 40px; border-radius: 50%; background: var(--charcoal); display: grid; place-items: center; box-shadow: inset 0 0 0 2px var(--gold); }
 .logo--light, .logo--light:hover { color: #fff; }
-.logo--light .logo__text em { color: var(--flame); }
+.logo--light .logo__text em { color: var(--gold-light); }
 .logo--light .logo__mark { background: var(--charcoal-2); }
 .nav { display: flex; gap: 2px; }
 .nav a { padding: 8px 12px; font-size: .92rem; font-weight: 500; color: var(--ink); text-decoration: none; white-space: nowrap; border-radius: 999px; }
@@ -156,6 +158,7 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 /* ---------- Hero ---------- */
 .hero { position: relative; overflow: hidden; color: #fff;
   background: radial-gradient(700px 420px at 20% 110%, rgba(243, 156, 51, .35), transparent 70%), radial-gradient(900px 500px at 85% 30%, #4a2a18 0%, var(--charcoal) 70%); }
+.hero[style*="background-image"] { background-size: cover; background-position: center; }
 .hero__embers { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero__grid { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 40px; padding-block: 56px 64px; }
 .eyebrow { font-family: var(--font-body); text-transform: uppercase; letter-spacing: .14em; font-size: .75rem; font-weight: 700; color: var(--flame); margin: 0 0 12px; }

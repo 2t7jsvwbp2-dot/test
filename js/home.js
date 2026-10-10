@@ -1,4 +1,7 @@
 (() => {
+  // Photo de fond de l'accueil, assombrie pour garder le texte lisible
+  if (SHOP.heroPhoto) $(".hero").style.backgroundImage = `linear-gradient(90deg, rgba(36,25,19,.92), rgba(36,25,19,.55)), url("${SHOP.heroPhoto}")`;
+
   // ---------- Commande express ----------
   const quick = $("#quick");
   const configs = PRODUCTS.filter((p) => p.type === "config");

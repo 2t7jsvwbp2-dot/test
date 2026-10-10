@@ -1,4 +1,4 @@
-# Bois & Braise
+# Le Stère d’Or
 
 Boutique en ligne de bois de chauffage pour la France. Site statique (HTML, CSS, JavaScript), sans serveur ni base de données : il s'héberge gratuitement sur GitHub Pages, Netlify ou Cloudflare Pages.
 

@@ -5,7 +5,7 @@
 // Les informations légales sont obligatoires pour vendre en ligne en France.
 
 const SHOP = {
-  name: "Bois & Braise",
+  name: "Le Stère d’Or",
   tagline: "Bois de chauffage sec, livré chez vous",
 
   // --- Identité légale (mentions légales, CGV, factures) ---
@@ -28,6 +28,9 @@ const SHOP = {
   // Montant minimum de bois par commande (hors accessoires et livraison), en euros TTC.
   // 0 = pas de minimum : il suffit qu'il y ait du bois dans le panier.
   minOrderAmount: 0,
+
+  // Photo de fond de l'accueil (facultatif), ex. "images/accueil.jpg" — 1920 × 1080 px conseillé
+  heroPhoto: "",
 
   // Stock de la saison, affiché sur l'accueil (en stères)
   season: { label: "Saison 2026 – 2027", total: 1200, sold: 742 },

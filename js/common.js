@@ -397,13 +397,13 @@ const ICON = {
   truck: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4h14v12H1zM15 9h4l4 4v3h-8z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
   box: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg>',
   menu: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>',
-  flame: '<svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M16 2c1 6 8 9 8 17a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 1 5 3 5-2-6 0-11 1-14z" fill="#f39c33"/><path d="M16 14c0 3 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1 1 2 2 2-1-3 0-5 0-7z" fill="#ffe08a"/></svg>',
+  flame: '<svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><circle cx="32" cy="19" r="12.5" fill="#d9a640"/><circle cx="32" cy="19" r="10.8" fill="#ebc48d"/><circle cx="32" cy="19" r="7" fill="none" stroke="#b98a52" stroke-width="1.3"/><circle cx="32" cy="19" r="3.5" fill="none" stroke="#b98a52" stroke-width="1.3"/><circle cx="19" cy="41" r="12.5" fill="#d9a640"/><circle cx="19" cy="41" r="10.8" fill="#ebc48d"/><circle cx="19" cy="41" r="7" fill="none" stroke="#b98a52" stroke-width="1.3"/><circle cx="19" cy="41" r="3.5" fill="none" stroke="#b98a52" stroke-width="1.3"/><circle cx="45" cy="41" r="12.5" fill="#d9a640"/><circle cx="45" cy="41" r="10.8" fill="#ebc48d"/><circle cx="45" cy="41" r="7" fill="none" stroke="#b98a52" stroke-width="1.3"/><circle cx="45" cy="41" r="3.5" fill="none" stroke="#b98a52" stroke-width="1.3"/></svg>',
 };
 
 function logoHtml(light = false) {
   return `<a href="index.html" class="logo${light ? " logo--light" : ""}" aria-label="${escapeHtml(SHOP.name)}, accueil">
     <span class="logo__mark" aria-hidden="true">${ICON.flame}</span>
-    <span class="logo__text">Bois <em>&amp;</em> Braise</span>
+    <span class="logo__text">Le Stère <em>d’Or</em></span>
   </a>`;
 }
 
