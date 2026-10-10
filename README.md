@@ -26,7 +26,7 @@ Tout se règle dans **`js/config.js`**. Tant qu'un champ est vide, le site affic
 1. **Identité légale** : `legalName`, `legalForm`, `siret`, `vatNumber`, `director`, `address`, `email`, `phone`.
 2. **Paiement par carte** : collez dans `payment.card.link` le lien de votre page de paiement (Stripe, SumUp, PayPal, Revolut Business, votre banque…). C'est le moyen proposé en premier.
 3. **Virement instantané** : `payment.transfer.holder`, `iban`, `bic`, `bank`. Proposé en alternative.
-4. **Livraison** (`delivery`) : uniquement sur palette, par transporteur. Réglez le prix par palette (`feePerPallet`), le volume maximum par palette (`pallet`, en stères), le délai annoncé (`minDays`, `maxDays`) et les départements non livrés (`excluded`).
+4. **Livraison** (`delivery`) : uniquement sur palette, par transporteur. Réglez le prix par palette (`feePerPallet`), le nombre de palettes à partir duquel la livraison est offerte (`freeFromPallets`), le volume maximum par palette (`pallet`, en stères), le délai annoncé (`minDays`, `maxDays`) et les départements non livrés (`excluded`).
 5. **Montant minimum** (`minOrderAmount`) : facultatif. Les accessoires (marqués `addon: true` dans `js/data.js`) ne sont jamais vendus seuls ; vous pouvez en plus exiger un montant minimum de bois.
 6. **Réception des commandes** : créez un formulaire gratuit sur [formspree.io](https://formspree.io) et collez son adresse dans `formEndpoint`. Sans cela, le client doit vous envoyer lui-même le récapitulatif par e-mail.
 7. **Stock de la saison** (`season`), **codes promo** (`promoCodes`), **TVA** (`vatRate`, 10 % pour le bois de chauffage vendu aux particuliers).

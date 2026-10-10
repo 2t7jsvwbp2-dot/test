@@ -17,7 +17,7 @@
     <article class="zone-card is-current">
       <h3>France métropolitaine</h3>
       <p class="zone-card__price">${euro(D.feePerPallet)}<small> par palette</small></p>
-      <p class="small">Jusqu'à ${plural(D.pallet, "stère")} par palette</p>
+      <p class="small">Jusqu'à ${plural(D.pallet, "stère")} par palette${D.freeFromPallets ? ` · <strong>offerte dès ${plural(D.freeFromPallets, "palette")}</strong>` : ""}</p>
       <p class="small muted">Hors Corse et outre-mer</p>
     </article>
     <article class="zone-card">
@@ -42,7 +42,11 @@
       const fill = Math.min(1, (st - i * D.pallet) / D.pallet);
       return `<span class="pal"><i style="height:${fill * 100}%"></i></span>`;
     }).join("");
-    $("#palText").innerHTML = `<strong>${plural(n, "palette")}</strong> · livraison ${euro(n * D.feePerPallet)}, soit ${euro((n * D.feePerPallet) / st)} par stère.`;
+    const free = isFreeDelivery(n);
+    const left = D.freeFromPallets * D.pallet - st;
+    $("#palText").innerHTML = free
+      ? `<strong>${plural(n, "palette")}</strong> · <strong>livraison offerte</strong>.`
+      : `<strong>${plural(n, "palette")}</strong> · livraison ${euro(n * D.feePerPallet)}, soit ${euro((n * D.feePerPallet) / st)} par stère.${D.freeFromPallets && left > 0 ? ` Encore ${plural(left, "stère")} et elle est offerte.` : ""}`;
   }
   $("#palRange").addEventListener("input", sim);
   sim();

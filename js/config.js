@@ -59,7 +59,8 @@ const SHOP = {
   // --- Livraison : uniquement sur palette, par transporteur ---
   delivery: {
     name: "Livraison sur palette",
-    feePerPallet: 89,      // prix TTC par palette
+    feePerPallet: 49,      // prix TTC par palette
+    freeFromPallets: 3,    // livraison offerte à partir de ce nombre de palettes (0 = jamais)
     pallet: 2,             // nombre de stères (équivalent) maximum par palette
     minDays: 7,            // délai de livraison annoncé : de 7…
     maxDays: 12,           // … à 12 jours après le paiement

@@ -153,6 +153,13 @@ function deliveryWindow(from = new Date()) {
 }
 const delayText = () => `${SHOP.delivery.minDays} à ${SHOP.delivery.maxDays} jours`;
 
+const isFreeDelivery = (pallets) => SHOP.delivery.freeFromPallets > 0 && pallets >= SHOP.delivery.freeFromPallets;
+// Phrase courte sur le tarif, réutilisée sur plusieurs pages
+const deliveryPriceText = () => {
+  const D = SHOP.delivery;
+  return `${euro(D.feePerPallet)} par palette de ${plural(D.pallet, "stère")} maximum${D.freeFromPallets ? `, offerte dès ${plural(D.freeFromPallets, "palette")} (${plural(D.freeFromPallets * D.pallet, "stère")})` : ""}`;
+};
+
 // Nombre de palettes : les accessoires voyagent avec le bois
 function palletCount(st) {
   return Math.max(1, Math.ceil(round2(st) / SHOP.delivery.pallet - 1e-9));
@@ -175,10 +182,11 @@ function deliveryOptions(cp, items = Cart.items()) {
   const st = round2(items.reduce((s, i) => s + i.st, 0));
   const pallets = palletCount(st);
   const loc = locate(cp);
+  const free = isFreeDelivery(pallets);
   const method = {
-    id: "palette", name: D.name, fee: pallets * D.feePerPallet, pallets,
+    id: "palette", name: D.name, fee: free ? 0 : pallets * D.feePerPallet, pallets, free,
     delay: `Livraison sous ${delayText()}, sur rendez-vous`,
-    note: `${plural(pallets, "palette")} · ${euro(D.feePerPallet)} par palette`,
+    note: free ? "Livraison offerte" : `${plural(pallets, "palette")} · ${euro(D.feePerPallet)} par palette`,
   };
   return { loc, methods: [method], st, pallets };
 }
@@ -200,7 +208,7 @@ function totalsHtml(t) {
   return `
     <div><dt>Sous-total</dt><dd>${euro(t.subtotal)}</dd></div>
     ${t.promo ? `<div class="totals__discount"><dt>Remise ${escapeHtml(t.promo.code)}</dt><dd>−${euro(t.discount)}</dd></div>` : ""}
-    <div><dt>Livraison <span class="muted small">(${plural(t.method.pallets, "palette")})</span></dt><dd>${t.items.length ? euro(t.shipping) : "—"}</dd></div>
+    <div><dt>Livraison <span class="muted small">(${plural(t.method.pallets, "palette")})</span></dt><dd>${!t.items.length ? "—" : t.shipping ? euro(t.shipping) : "Offerte"}</dd></div>
     <div class="totals__grand"><dt>Total TTC</dt><dd>${euro(t.total)}</dd></div>
     <div class="totals__vat"><dt>dont TVA ${SHOP.vatRate} %</dt><dd>${euro(t.vat)}</dd></div>`;
 }
@@ -543,7 +551,7 @@ function deliverySummary(cp) {
   const D = SHOP.delivery;
   const w = deliveryWindow();
   return `<div class="cp-result__ok">
-    <p><strong>Nous livrons au ${escapeHtml(cp)}</strong> : sur palette par transporteur, ${euro(D.feePerPallet)} par palette de ${plural(D.pallet, "stère")} maximum.</p>
+    <p><strong>Nous livrons au ${escapeHtml(cp)}</strong> : sur palette par transporteur, ${deliveryPriceText()}.</p>
     <p class="small">Livraison sous ${delayText()} : pour une commande payée aujourd'hui, entre le ${fmtDate(w.from, { day: "numeric", month: "long" })} et le ${fmtDate(w.to, { day: "numeric", month: "long" })}.</p>
   </div>`;
 }

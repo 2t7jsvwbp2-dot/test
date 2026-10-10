@@ -37,8 +37,12 @@
     const room = round2(cap - t.st);
     $("#volMeter").innerHTML = `<span style="width:${Math.min(100, (t.st / cap) * 100)}%"></span>`;
     $("#volMeter").hidden = !t.st;
-    $("#freeHint").textContent = t.st && room >= 0.5
-      ? `Il reste de la place pour ${num(room)} stère${room >= 2 ? "s" : ""} sur ${m.pallets > 1 ? "vos palettes" : "votre palette"}, sans frais de livraison en plus.`
+    const D = SHOP.delivery;
+    const toFree = round2(D.freeFromPallets * D.pallet - t.st);
+    $("#freeHint").textContent = !t.st ? ""
+      : m.free ? "Livraison offerte pour votre commande."
+      : D.freeFromPallets && toFree <= 2 * D.pallet ? `Encore ${num(toFree)} stère${toFree >= 2 ? "s" : ""} et la livraison est offerte (dès ${plural(D.freeFromPallets, "palette")}).`
+      : room >= 0.5 ? `Il reste de la place pour ${num(room)} stère${room >= 2 ? "s" : ""} sur ${m.pallets > 1 ? "vos palettes" : "votre palette"}, sans frais de livraison en plus.`
       : "";
     const loc = t.del.loc;
     $("#deliveryLine").innerHTML = deptOf(cp) && !loc.ok

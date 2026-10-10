@@ -36,8 +36,8 @@
       ? '<p class="notice">Nous ne livrons pas ce département (Corse, outre-mer).</p>'
       : `<div class="option option--static">
           <span class="option__body"><strong>${escapeHtml(m.name)} · ${plural(m.pallets, "palette")}</strong>
-            <span class="muted small">${escapeHtml(m.delay)} · ${euro(SHOP.delivery.feePerPallet)} par palette de ${plural(SHOP.delivery.pallet, "stère")} maximum</span></span>
-          <span class="option__price">${euro(m.fee)}</span>
+            <span class="muted small">${escapeHtml(m.delay)} · ${deliveryPriceText()}</span></span>
+          <span class="option__price">${m.fee ? euro(m.fee) : "Offerte"}</span>
         </div>`;
 
     $("#miniCart").innerHTML = t.items.map((i) => `

@@ -20,7 +20,7 @@
       return `<p class="small addon-note">Vendu uniquement en complément d'une commande de bois. <a href="catalogue.html?categorie=buches">Choisir du bois</a></p>`;
     if (deptOf(store.get("cp", "")) && !d.loc.ok)
       return `<p class="small">Nous ne livrons pas ce département. <button type="button" class="link small" data-open-cp>Changer de code postal</button></p>`;
-    return `<p class="small"><strong>${escapeHtml(m.name)}</strong> : ${plural(m.pallets, "palette")}, ${euro(m.fee)} pour ${Cart.items().length ? "l'ensemble de votre panier" : "cette quantité"}.<br>
+    return `<p class="small"><strong>${escapeHtml(m.name)}</strong> : ${plural(m.pallets, "palette")}, ${m.fee ? euro(m.fee) : "offerte"} pour ${Cart.items().length ? "l'ensemble de votre panier" : "cette quantité"}.<br>
       <span class="muted">Livraison sous ${delayText()} partout en France métropolitaine.</span></p>`;
   }
 
@@ -149,7 +149,7 @@
       </div>
       <div class="tab-panel" role="tabpanel" id="tab-livraison" aria-labelledby="t2" hidden>
         <p>Votre bois est rangé et filmé sur palette, puis livré par transporteur partout en France métropolitaine (hors Corse) <strong>sous ${delayText()}</strong> après réception du paiement. Le transporteur vous appelle pour fixer le rendez-vous et dépose la palette au hayon, en bordure de propriété.</p>
-        <p>${euro(SHOP.delivery.feePerPallet)} par palette de ${plural(SHOP.delivery.pallet, "stère")} maximum. <a href="livraison.html">Tout savoir sur la livraison</a></p>
+        <p>Livraison ${deliveryPriceText()}. <a href="livraison.html">Tout savoir sur la livraison</a></p>
       </div>
       <div class="tab-panel" role="tabpanel" id="tab-conseils" aria-labelledby="t3" hidden>
         <ul class="prose">
