@@ -700,3 +700,6 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .photo-duo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 16px; }
 .photo-duo figcaption { font-size: .82rem; color: var(--muted); margin-top: 6px; }
 @media (max-width: 600px) { .photo-duo { grid-template-columns: 1fr; } .photo-duo img { aspect-ratio: 4 / 3; } }
+.photo-wide { margin: 24px 0 8px; }
+.photo-wide img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 16px; }
+.photo-wide figcaption { font-size: .82rem; color: var(--muted); margin-top: 6px; }
