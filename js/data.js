@@ -98,7 +98,7 @@ const PRODUCTS = [
     text: "Bâche armée 180 g/m² avec œillets. Couvrez le dessus du tas, laissez les côtés respirer." },
   { id: "range-buches", type: "fixed", category: "accessoires", kind: "accessoire", name: "Range-bûches acier · 1 stère",
     price: 89, unit: "pièce", addon: true, st: 0, popular: 38, max: 5,
-    text: "Structure acier galvanisé de 120 × 100 × 40 cm. Garde le bois hors sol et bien ventilé." },
+    text: "Structure en acier noir, ouverte sur les côtés. Garde le bois hors sol et bien ventilé, à l'intérieur comme à l'extérieur." },
 ];
 
 // Énergies de comparaison pour le calculateur : prix par kWh utile (rendement inclus)
@@ -124,4 +124,8 @@ const PHOTOS = {
   "palette-25": "images/produits/palette-25.webp",
   "sac-buchettes": "images/produits/sac-buchettes.webp",
   allumage: "images/produits/allumage.webp",
+  "densifie-palette": "images/produits/densifie-palette.webp",
+  "granules-sac": "images/produits/granules-sac.webp",
+  "granules-palette": "images/produits/granules-palette.webp",
+  "range-buches": "images/produits/range-buches.webp",
 };
