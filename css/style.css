@@ -703,3 +703,4 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .photo-wide { margin: 24px 0 8px; }
 .photo-wide img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 16px; }
 .photo-wide figcaption { font-size: .82rem; color: var(--muted); margin-top: 6px; }
+.essence-picker__art img, .finder__art img { border-radius: 14px; }

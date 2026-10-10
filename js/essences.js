@@ -35,7 +35,7 @@
   $("#essGrid").innerHTML = ESSENCES.map((e) => {
     const p = configs.find((x) => x.essence === e.id);
     return `<article class="ess-card reveal is-visible" id="${e.id}">
-      <div class="ess-card__art">${stackSvg(e, "card" + e.id, { rows: 3, cols: 5 })}</div>
+      <div class="ess-card__art">${essenceArt(e, "card" + e.id, { rows: 3, cols: 5 })}</div>
       <div class="ess-card__body">
         <h3>${escapeHtml(e.name)}</h3>
         <p>${escapeHtml(e.text)}</p>
@@ -80,7 +80,7 @@
     const len = answers.appareil === "chaudiere" ? 50 : answers.appareil === "cheminee" ? 50 : 33;
     $("#finderResult").innerHTML = `
       <div class="finder__card">
-        <div class="finder__art">${stackSvg(best.e, "best" + best.e.id, { rows: 3, cols: 4 })}</div>
+        <div class="finder__art">${essenceArt(best.e, "best" + best.e.id, { rows: 3, cols: 4 })}</div>
         <div>
           <p class="eyebrow eyebrow--dark">Notre conseil</p>
           <h3>${escapeHtml(best.e.name)}, coupé en ${lengthByCm(len).label}</h3>

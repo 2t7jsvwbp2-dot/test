@@ -12,12 +12,10 @@ const ESSENCES = [
     text: "La référence pour le chauffage principal : combustion lente, braises durables, idéal pour les nuits d'hiver. Doit être bien sec pour donner le meilleur." },
   { id: "hetre", name: "Hêtre", kwh: 1950, kg: 470, flame: 5, embers: 3, lighting: 4, color: "#b77c4a", ring: "#e2b685", bark: "#6f6a64",
     text: "Belle flamme vive et régulière, s'allume facilement. Parfait en cheminée ou en insert pour profiter du spectacle du feu." },
-  { id: "charme", name: "Charme", kwh: 2050, kg: 520, flame: 4, embers: 5, lighting: 3, color: "#a07045", ring: "#dcb98c", bark: "#7b7a74",
-    text: "Le plus calorifique des feuillus courants : très dense, chaleur intense et braises de longue durée. Le choix des connaisseurs." },
   { id: "frene", name: "Frêne", kwh: 1900, kg: 460, flame: 4, embers: 3, lighting: 4, color: "#c49564", ring: "#ecd0a6", bark: "#77705f",
     text: "Sèche vite et brûle proprement, avec peu de fumée. Un bon compromis entre facilité d'allumage et durée de combustion." },
   { id: "melange", name: "Mélange feuillus durs", kwh: 1950, kg: 480, flame: 4, embers: 4, lighting: 3, color: "#9c6b40", ring: "#d8ae7c", bark: "#5c4a3a",
-    text: "Chêne, hêtre et charme en proportions variables selon les coupes. Le meilleur rapport qualité-prix pour un chauffage principal." },
+    text: "Chêne, hêtre et frêne en proportions variables selon les coupes. Le meilleur rapport qualité-prix pour un chauffage principal." },
   { id: "bouleau", name: "Bouleau", kwh: 1700, kg: 400, flame: 5, embers: 2, lighting: 5, color: "#d8b98c", ring: "#f3e3c6", bark: "#ece7dc",
     text: "S'enflamme en un instant avec une flamme claire et décorative. Idéal pour l'appoint, les flambées de soirée et la relance du feu." },
 ];
@@ -50,22 +48,22 @@ const CATEGORIES = [
 // addon : accessoire vendu uniquement en complément d'une commande de bois
 // st : volume en stère-équivalent d'une unité (sert au calcul du nombre de palettes)
 const PRODUCTS = [
-  ...ESSENCES.map((e, i) => ({
+  ...ESSENCES.map((e) => ({
     id: e.id,
     type: "config",
     category: "buches",
     essence: e.id,
-    name: e.id === "melange" ? "Bûches mélange chêne, hêtre, charme" : `Bûches de ${e.name.toLowerCase()}`,
-    base: [89, 92, 95, 85, 79, 84][i],
+    name: e.id === "melange" ? "Bûches mélange de feuillus durs" : `Bûches de ${e.name.toLowerCase()}`,
+    base: { chene: 89, hetre: 92, frene: 85, melange: 79, bouleau: 84 }[e.id],
     unit: "stère",
     st: 1,
-    popular: [96, 88, 74, 61, 99, 52][i],
+    popular: { chene: 96, hetre: 88, frene: 61, melange: 99, bouleau: 52 }[e.id],
     lengths: [100, 50, 33, 25],
     dryings: ["air", "four"],
   })),
   { id: "palette-33", type: "fixed", category: "palettes", essence: "melange", name: "Palette 1,8 stère · 33 cm séché four",
     price: 249, unit: "palette", st: 1.8, len: 33, dry: "four", popular: 90,
-    text: "Chêne, hêtre et charme rangés à la main en caisse-palette, soit environ 1,26 m³ apparent. Propre, stable, se stocke dans un garage." },
+    text: "Chêne, hêtre et frêne rangés à la main en caisse-palette, soit environ 1,26 m³ apparent. Propre, stable, se stocke dans un garage." },
   { id: "palette-25", type: "fixed", category: "palettes", essence: "hetre", name: "Palette 1,8 stère · 25 cm hêtre séché four",
     price: 265, unit: "palette", st: 1.8, len: 25, dry: "four", popular: 70,
     text: "Hêtre pur coupé en 25 cm et rangé en caisse-palette, environ 1,08 m³ apparent. Le format idéal pour les petits poêles et les cuisinières." },
@@ -120,6 +118,10 @@ const ENERGIES = [
 const PHOTOS = {
   melange: "images/produits/melange.webp",
   "allume-feu": "images/produits/allume-feu.webp",
+  chene: "images/produits/chene.webp",
+  hetre: "images/produits/hetre.webp",
+  frene: "images/produits/frene.webp",
+  bouleau: "images/produits/bouleau.webp",
   "palette-33": "images/produits/palette-33.webp",
   "palette-25": "images/produits/palette-25.webp",
   "sac-buchettes": "images/produits/sac-buchettes.webp",

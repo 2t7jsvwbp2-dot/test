@@ -333,6 +333,13 @@ const ACCESSORY_ART = {
     <g>${Array.from({ length: 9 }, (_, i) => `<rect x="${128 + (i % 3) * 49}" y="${200 - Math.floor(i / 3) * 46}" width="44" height="42" rx="20" fill="#9c6b40" stroke="#3d2a1a" stroke-width="3"/>`).join("")}</g>`,
 };
 
+// Photo de l'essence si elle existe, sinon tas de bûches dessiné
+function essenceArt(e, seed, opts) {
+  if (typeof PHOTOS !== "undefined" && PHOTOS[e.id])
+    return `<img class="art-photo" src="${escapeHtml(PHOTOS[e.id])}" alt="Bûches de ${escapeHtml(e.name.toLowerCase())}" loading="lazy" width="1200" height="900">`;
+  return stackSvg(e, seed, opts);
+}
+
 function productArt(p, opts = {}) {
   if (typeof PHOTOS !== "undefined" && PHOTOS[p.id])
     return `<img class="art-photo" src="${escapeHtml(PHOTOS[p.id])}" alt="${escapeHtml(p.name)}" loading="lazy" width="1200" height="900">`;

@@ -94,7 +94,7 @@
     const e = essenceById(current);
     const p = PRODUCTS.find((x) => x.type === "config" && x.essence === e.id);
     $("#essPanel").innerHTML = `
-      <div class="essence-picker__art">${stackSvg(e, "tab" + e.id, { rows: 3, cols: 5 })}</div>
+      <div class="essence-picker__art">${essenceArt(e, "tab" + e.id, { rows: 3, cols: 5 })}</div>
       <div>
         <h3>${escapeHtml(e.name)}</h3>
         <p>${escapeHtml(e.text)}</p>
