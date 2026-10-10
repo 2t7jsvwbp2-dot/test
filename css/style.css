@@ -704,3 +704,17 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .photo-wide img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 16px; }
 .photo-wide figcaption { font-size: .82rem; color: var(--muted); margin-top: 6px; }
 .essence-picker__art img, .finder__art img { border-radius: 14px; }
+
+/* ---------- Accessibilité et confort tactile ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+html { -webkit-tap-highlight-color: transparent; }
+button, a, input, select, label { touch-action: manipulation; }
+@media (pointer: coarse) {
+  .seg__btn, .cat-tabs button, .chip, .copy-btn, .date-card { min-height: 44px; }
+  .qty--sm button { width: 44px; height: 44px; }
+}
+@media (max-width: 600px) {
+  .cp-chip { padding: 8px 10px; }
+  .cp-chip span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .cp-chip--set span { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+}

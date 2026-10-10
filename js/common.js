@@ -375,7 +375,7 @@ function productArt(p, opts = {}) {
 // Composants
 // ---------------------------------------------------------------------
 function meter(value, label) {
-  return `<span class="meter" title="${label} : ${value}/5" aria-label="${label} : ${value} sur 5">${Array.from({ length: 5 }, (_, i) => `<i${i < value ? ' class="on"' : ""}></i>`).join("")}</span>`;
+  return `<span class="meter" role="img" title="${label} : ${value}/5" aria-label="${label} : ${value} sur 5">${Array.from({ length: 5 }, (_, i) => `<i${i < value ? ' class="on"' : ""}></i>`).join("")}</span>`;
 }
 
 function productCard(p) {
@@ -428,7 +428,7 @@ function renderLayout() {
 
   document.body.insertAdjacentHTML("afterbegin", `
     <a class="skip" href="#main">Aller au contenu</a>
-    <div class="topbar">Bois sec garanti &lt; 20 % d'humidité · Livraison sur palette partout en France sous ${delayText()} · TVA ${SHOP.vatRate} %</div>
+    <aside class="topbar" aria-label="Informations">Bois sec garanti &lt; 20 % d'humidité · Livraison sur palette partout en France sous ${delayText()} · TVA ${SHOP.vatRate} %</aside>
     <header class="header">
       <div class="container header__row">
         ${logoHtml()}
@@ -450,14 +450,14 @@ function renderLayout() {
     </header>`);
 
   document.body.insertAdjacentHTML("beforeend", `
-    <section class="reassurance">
+    <aside class="reassurance" aria-label="Nos engagements">
       <div class="container reassurance__grid">
         <div><strong>Volume honnête</strong><span>Prix au stère et au m³ apparent, sans surprise</span></div>
         <div><strong>Bois sec mesuré</strong><span>Humidité contrôlée à l'humidimètre avant chaque livraison</span></div>
         <div><strong>Livré sur palette</strong><span>Partout en France métropolitaine, sous ${delayText()}</span></div>
         <div><strong>Paiement sécurisé</strong><span>Carte bancaire ou virement instantané</span></div>
       </div>
-    </section>
+    </aside>
     <footer class="footer">
       <div class="container footer__grid">
         <div class="footer__brand">
