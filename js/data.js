@@ -39,7 +39,7 @@ const DRYINGS = [
 
 const CATEGORIES = [
   { id: "buches", name: "Bûches au stère", text: "Rangées sur palette, la coupe et le séchage de votre choix" },
-  { id: "palettes", name: "Palettes filmées", text: "Rangées, propres, faciles à stocker" },
+  { id: "palettes", name: "Caisses-palettes", text: "Bûches rangées en caisse, propres et faciles à stocker" },
   { id: "petits-formats", name: "Sacs de bûches", text: "Pour l'appartement ou la flambée du week-end" },
   { id: "densifie", name: "Bûches densifiées", text: "Sciure compressée sans additif, très peu d'humidité" },
   { id: "granules", name: "Granulés", text: "Pour poêles et chaudières à pellets" },
@@ -65,10 +65,10 @@ const PRODUCTS = [
   })),
   { id: "palette-33", type: "fixed", category: "palettes", essence: "melange", name: "Palette 1,8 stère · 33 cm séché four",
     price: 249, unit: "palette", st: 1.8, len: 33, dry: "four", popular: 90,
-    text: "Chêne, hêtre et charme rangés sur palette filmée, soit environ 1,26 m³ apparent. Propre, stable, se stocke dans un garage." },
+    text: "Chêne, hêtre et charme rangés à la main en caisse-palette, soit environ 1,26 m³ apparent. Propre, stable, se stocke dans un garage." },
   { id: "palette-25", type: "fixed", category: "palettes", essence: "hetre", name: "Palette 1,8 stère · 25 cm hêtre séché four",
     price: 265, unit: "palette", st: 1.8, len: 25, dry: "four", popular: 70,
-    text: "Hêtre pur coupé en 25 cm, environ 1,08 m³ apparent. Le format idéal pour les petits poêles et les cuisinières." },
+    text: "Hêtre pur coupé en 25 cm et rangé en caisse-palette, environ 1,08 m³ apparent. Le format idéal pour les petits poêles et les cuisinières." },
   { id: "sac-buchettes", type: "fixed", category: "petits-formats", essence: "hetre", name: "Sac de bûches 40 L · 25 cm séché four",
     price: 9.9, unit: "sac", st: 0.07, len: 25, dry: "four", popular: 66, max: 60,
     text: "Environ 15 kg de hêtre séché au four, prêt à brûler. Pratique pour l'appartement ou une flambée occasionnelle." },
@@ -120,4 +120,8 @@ const ENERGIES = [
 const PHOTOS = {
   melange: "images/produits/melange.webp",
   "allume-feu": "images/produits/allume-feu.webp",
+  "palette-33": "images/produits/palette-33.webp",
+  "palette-25": "images/produits/palette-25.webp",
+  "sac-buchettes": "images/produits/sac-buchettes.webp",
+  allumage: "images/produits/allumage.webp",
 };
