@@ -77,7 +77,7 @@ const PRODUCTS = [
     text: "Petit bois de résineux séché au four, fendu fin. Un sac suffit pour une vingtaine d'allumages." },
   { id: "densifie-pack", type: "fixed", category: "densifie", kind: "densifie", name: "Bûches densifiées · pack de 10 kg",
     price: 6.9, unit: "pack", st: 0.025, popular: 58, max: 96,
-    text: "6 bûches de sciure de feuillus compressée, sans colle ni additif. Moins de 10 % d'humidité, 4,9 kWh/kg." },
+    text: "Bûches de sciure de feuillus compressée, sans colle ni additif, livrées en carton. Moins de 10 % d'humidité, 4,9 kWh/kg." },
   { id: "densifie-palette", type: "fixed", category: "densifie", kind: "densifie", name: "Bûches densifiées · palette de 960 kg",
     price: 549, unit: "palette", st: 2, popular: 47, max: 10,
     text: "96 packs de 10 kg. Une tonne de densifié remplace environ 2,5 stères de bûches classiques et occupe trois fois moins de place." },
@@ -128,4 +128,7 @@ const PHOTOS = {
   "granules-sac": "images/produits/granules-sac.webp",
   "granules-palette": "images/produits/granules-palette.webp",
   "range-buches": "images/produits/range-buches.webp",
+  "densifie-pack": "images/produits/densifie-pack.webp",
+  humidimetre: "images/produits/humidimetre.webp",
+  bache: "images/produits/bache.webp",
 };
