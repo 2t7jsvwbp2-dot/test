@@ -59,7 +59,7 @@
 
   // ---------- Catégories et produits ----------
   $("#categoryGrid").innerHTML = CATEGORIES.map((c) => {
-    const first = PRODUCTS.find((p) => p.category === c.id);
+    const first = PRODUCTS.find((p) => p.category === c.id && PHOTOS[p.id]) || PRODUCTS.find((p) => p.category === c.id);
     return `<a class="cat-card" href="catalogue.html?categorie=${c.id}">
       <span class="cat-card__art">${productArt(first, defaultOpts(first))}</span>
       <span class="cat-card__name">${escapeHtml(c.name)}</span>

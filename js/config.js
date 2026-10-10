@@ -30,7 +30,7 @@ const SHOP = {
   minOrderAmount: 0,
 
   // Photo de fond de l'accueil (facultatif), ex. "images/accueil.jpg" — 1920 × 1080 px conseillé
-  heroPhoto: "",
+  heroPhoto: "images/accueil.webp",
 
   // Stock de la saison, affiché sur l'accueil (en stères)
   season: { label: "Saison 2026 – 2027", total: 1200, sold: 742 },

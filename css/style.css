@@ -40,6 +40,7 @@ body {
   color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased;
 }
 img, svg { max-width: 100%; display: block; }
+img { height: auto; }
 a { color: var(--ember); }
 a:hover { color: var(--ember-dark); }
 button { font: inherit; cursor: pointer; color: inherit; }
@@ -694,3 +695,8 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 .pallet-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
 .pal { width: 54px; height: 54px; border: 2px dashed #cdbba6; border-radius: 6px 6px 0 0; position: relative; overflow: hidden; border-bottom: 8px solid #c9a26b; }
 .pal i { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, #c89a62, #8a5a2b); transition: height .3s; }
+.photo-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0 8px; }
+.photo-duo figure { margin: 0; }
+.photo-duo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 16px; }
+.photo-duo figcaption { font-size: .82rem; color: var(--muted); margin-top: 6px; }
+@media (max-width: 600px) { .photo-duo { grid-template-columns: 1fr; } .photo-duo img { aspect-ratio: 4 / 3; } }

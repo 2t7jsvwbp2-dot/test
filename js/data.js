@@ -118,4 +118,6 @@ const ENERGIES = [
 // 1200 × 900 px (rapport 4:3). Exemple :
 //   chene: "images/produits/chene.jpg",
 const PHOTOS = {
+  melange: "images/produits/melange.webp",
+  "allume-feu": "images/produits/allume-feu.webp",
 };

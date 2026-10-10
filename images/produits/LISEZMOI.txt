@@ -1,3 +1,0 @@
-Déposez ici les photos des produits (JPEG ou WebP, 1200 x 900 px, paysage),
-nommées par identifiant de produit : chene.jpg, hetre.jpg, palette-33.jpg…
-Puis déclarez-les dans PHOTOS, à la fin de js/data.js.
