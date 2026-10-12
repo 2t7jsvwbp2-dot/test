@@ -10,11 +10,6 @@ const SHOP = {
 
   // --- Identité légale (mentions légales, CGV, factures) ---
   legalName: "",        // Nom et prénom de l'exploitant ou raison sociale
-  legalForm: "",        // ex. « Entrepreneur individuel » ou « SARL au capital de 5 000 € »
-  siret: "",            // 14 chiffres
-  vatNumber: "",        // N° TVA intracommunautaire, ou « TVA non applicable, art. 293 B du CGI »
-  director: "",         // Directeur de la publication
-  address: "",          // Adresse de l'entreprise
   email: "",            // Adresse e-mail de contact
   phone: "",            // Numéro de téléphone
   hours: "Du lundi au samedi, 8h – 18h",
