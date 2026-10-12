@@ -9,9 +9,9 @@ const SHOP = {
   tagline: "Bois de chauffage sec, livré chez vous",
 
   // --- Identité légale (mentions légales, CGV, factures) ---
-  legalName: "",        // Nom et prénom de l'exploitant ou raison sociale
-  email: "",            // Adresse e-mail de contact
-  phone: "",            // Numéro de téléphone
+  legalName: "Le stère d'or",        // Nom et prénom de l'exploitant ou raison sociale
+  email: "lesteredor@gmail.com",            // Adresse e-mail de contact
+  phone: "00751551135",            // Numéro de téléphone
   hours: "Du lundi au samedi, 8h – 18h",
 
   // Hébergeur du site (obligatoire dans les mentions légales)
