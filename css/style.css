@@ -731,3 +731,4 @@ button, a, input, select, label { touch-action: manipulation; }
 .error-summary h2 { font-size: 1.15rem; margin-bottom: 8px; color: var(--red); }
 .error-summary ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
 .error-summary a { color: var(--red); font-weight: 600; }
+.quick__art .art-photo { aspect-ratio: auto; height: 200px; object-fit: cover; }

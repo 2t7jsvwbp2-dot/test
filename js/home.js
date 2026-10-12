@@ -5,7 +5,7 @@
   // ---------- Commande express ----------
   const quick = $("#quick");
   const configs = PRODUCTS.filter((p) => p.type === "config");
-  const state = { id: "chene", len: 33, dry: "air", qty: 4 };
+  const state = { id: "hetre", len: 33, dry: "air", qty: 4 };
 
   const segBtn = (group, value, label, sub = "") =>
     `<button type="button" class="seg__btn" data-group="${group}" data-value="${value}" aria-pressed="false">${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
