@@ -67,7 +67,7 @@
   }
 
   function chip(label, key, value = "") {
-    return `<button type="button" class="chip" data-clear="${key}" data-value="${value}">${escapeHtml(label)} ✕</button>`;
+    return `<button type="button" class="chip" data-clear="${key}" data-value="${value}" aria-label="Retirer le filtre ${escapeHtml(label)}">${escapeHtml(label)} <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`;
   }
 
   function render() {

@@ -15,8 +15,8 @@
   // Carte bancaire d'abord, virement instantané en alternative
   const pay = SHOP.payment;
   const PAYMENTS = [
-    pay.card.enabled && { id: "carte", name: "Carte bancaire", tag: "Recommandé", logo: "▭", text: "Paiement sécurisé par carte (CB, Visa, Mastercard) sur notre page de paiement." },
-    pay.transfer.enabled && { id: "virement", name: "Virement instantané", logo: "€", text: "Depuis l'application de votre banque, reçu en quelques secondes." },
+    pay.card.enabled && { id: "carte", name: "Carte bancaire", tag: "Recommandé", logo: ICON.card, text: "Paiement sécurisé par carte (CB, Visa, Mastercard) sur notre page de paiement." },
+    pay.transfer.enabled && { id: "virement", name: "Virement instantané", logo: ICON.bank, text: "Depuis l'application de votre banque, reçu en quelques secondes." },
   ].filter(Boolean);
   $("#paymentOptions").innerHTML = PAYMENTS.map((p, i) => `
     <label class="option">

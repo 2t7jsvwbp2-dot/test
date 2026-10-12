@@ -3,7 +3,7 @@
    ===================================================================== */
 :root {
   /* Couleurs du logo : brun foncé, or, crème */
-  --ember: #8a5f12;        /* or foncé : liens, accents sur fond clair */
+  --ember: #7a530e;        /* or foncé : liens, accents sur fond clair */
   --ember-dark: #6e4b0c;
   --ember-soft: #f7ecd2;
   --flame: #e0b04a;
@@ -51,7 +51,9 @@ h3, .h3 { font-size: 1.3rem; }
 .h4 { font-size: 1.05rem; margin-top: 1.2em; }
 p { margin: 0 0 1em; }
 [hidden] { display: none !important; }
-:focus-visible { outline: 3px solid var(--flame); outline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--ember); outline-offset: 2px; }
+/* Sur fond sombre, contour doré clair pour garder un contraste suffisant */
+.hero :focus-visible, .footer :focus-visible, .topbar :focus-visible, .result-card :focus-visible, .toast :focus-visible { outline-color: var(--gold-light); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 
 .container { width: min(1240px, 100% - 32px); margin-inline: auto; }
@@ -710,7 +712,8 @@ legend, .opt-title { font-size: .8rem; font-weight: 700; text-transform: upperca
 html { -webkit-tap-highlight-color: transparent; }
 button, a, input, select, label { touch-action: manipulation; }
 @media (pointer: coarse) {
-  .seg__btn, .cat-tabs button, .chip, .copy-btn, .date-card { min-height: 44px; }
+  .seg__btn, .cat-tabs button, .chip, .copy-btn, .date-card, .cp-chip, .tabs button { min-height: 44px; }
+  .icon-link, .menu-btn { min-width: 44px; min-height: 44px; justify-content: center; }
   .qty--sm button { width: 44px; height: 44px; }
 }
 @media (max-width: 600px) {
@@ -718,3 +721,13 @@ button, a, input, select, label { touch-action: manipulation; }
   .cp-chip span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .cp-chip--set span { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
 }
+.toast__action { background: none; border: 0; padding: 4px 6px; margin-left: 8px; color: var(--gold-light); font-weight: 700; text-decoration: underline; }
+.chip { display: inline-flex; align-items: center; gap: 6px; }
+.pay-logo svg { display: block; }
+.cart-row__price .link { padding: 6px 0; min-height: 32px; }
+.th-sort { padding: 8px 0; min-height: 32px; }
+@media (pointer: coarse) { .cart-row__price .link, .th-sort { min-height: 44px; } }
+.error-summary { grid-column: 1 / -1; border: 2px solid var(--red); background: #fff6f5; border-radius: 14px; padding: 16px 20px; margin-bottom: 18px; }
+.error-summary h2 { font-size: 1.15rem; margin-bottom: 8px; color: var(--red); }
+.error-summary ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.error-summary a { color: var(--red); font-weight: 600; }

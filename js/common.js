@@ -112,6 +112,13 @@ const Cart = {
     const lines = this.raw();
     const line = lines.find((l) => l.key === key);
     if (!line) return;
+    // Retrait d'un article : proposer d'annuler
+    if (qty <= 0) {
+      const before = lines.map((l) => ({ ...l }));
+      this.save(lines.filter((l) => l.key !== key));
+      toast(`${productById(line.id).name} retiré du panier`, { label: "Annuler", onClick: () => this.save(before) });
+      return;
+    }
     const max = productById(line.id).max || 30;
     line.qty = Math.max(0, Math.min(qty, max));
     this.save(lines.filter((l) => l.qty > 0));
@@ -408,6 +415,8 @@ function productCard(p) {
 // En-tête, pied de page, dialogue code postal
 // ---------------------------------------------------------------------
 const ICON = {
+  card: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>',
+  bank: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>',
   cart: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>',
   truck: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4h14v12H1zM15 9h4l4 4v3h-8z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
   box: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg>',
@@ -579,10 +588,13 @@ function updateHeaderCart() {
 let toastTimer;
 function toast(msg, action) {
   const t = $("#toast");
-  t.innerHTML = escapeHtml(msg) + (action ? ` <a href="${action.href}">${escapeHtml(action.label)}</a>` : "");
+  t.innerHTML = escapeHtml(msg) + (!action ? ""
+    : action.onClick ? ` <button type="button" class="toast__action">${escapeHtml(action.label)}</button>`
+    : ` <a href="${action.href}">${escapeHtml(action.label)}</a>`);
+  if (action?.onClick) $(".toast__action", t).addEventListener("click", () => { action.onClick(); t.classList.remove("toast--show"); });
   t.classList.add("toast--show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("toast--show"), 3200);
+  toastTimer = setTimeout(() => t.classList.remove("toast--show"), action?.onClick ? 5000 : 3200);
 }
 
 async function copyText(text, btn) {
@@ -604,13 +616,19 @@ async function copyText(text, btn) {
 function checkField(el) {
   const ok = el.disabled || el.checkValidity();
   el.classList.toggle("invalid", !ok);
+  if (ok) el.removeAttribute("aria-invalid"); else el.setAttribute("aria-invalid", "true");
   const field = el.closest(".field");
   if (field) {
     let msg = $(".field__error", field);
+    const errId = (el.id || el.name) + "-erreur";
     if (!ok) {
-      if (!msg) { msg = document.createElement("p"); msg.className = "field__error"; field.append(msg); }
+      if (!msg) { msg = document.createElement("p"); msg.className = "field__error"; msg.id = errId; field.append(msg); }
       msg.textContent = el.dataset.error || el.validationMessage;
-    } else if (msg) msg.remove();
+      el.setAttribute("aria-describedby", errId);
+    } else if (msg) {
+      msg.remove();
+      el.removeAttribute("aria-describedby");
+    }
   }
   return ok;
 }
@@ -619,15 +637,38 @@ function checkField(el) {
 document.addEventListener("input", (e) => { if (e.target.classList?.contains("invalid")) checkField(e.target); });
 document.addEventListener("change", (e) => { if (e.target.classList?.contains("invalid")) checkField(e.target); });
 
+// Valide un formulaire. Avec plusieurs erreurs, un récapitulatif cliquable
+// s'affiche en haut et prend le focus ; avec une seule, le champ est mis en vue.
 function validateForm(form) {
-  let first = null;
+  const invalid = [];
   $$("input, textarea, select", form).forEach((el) => {
     if (el.type === "radio") return;
-    const ok = checkField(el);
-    if (!ok && !first) first = el;
+    if (!checkField(el)) invalid.push(el);
   });
-  first?.focus();
-  return !first;
+  $(".error-summary", form)?.remove();
+  if (!invalid.length) return true;
+  if (invalid.length === 1) {
+    invalid[0].focus({ preventScroll: true });
+    invalid[0].scrollIntoView({ block: "center" });
+    return false;
+  }
+  const label = (el) => (el.type === "checkbox" ? "" : (el.closest(".field")?.querySelector("label")?.textContent || "")).replace(/\(facultatif\)/, "").trim();
+  form.insertAdjacentHTML("afterbegin", `<div class="error-summary" role="alert" tabindex="-1">
+    <h2>${invalid.length} informations à corriger</h2>
+    <ul>${invalid.map((el) => `<li><a href="#${el.id}">${label(el) ? escapeHtml(label(el)) + " : " : ""}${escapeHtml(el.dataset.error || el.validationMessage)}</a></li>`).join("")}</ul>
+  </div>`);
+  const box = $(".error-summary", form);
+  box.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (!link) return;
+    e.preventDefault();
+    const el = $(link.getAttribute("href"));
+    el.focus({ preventScroll: true });
+    el.scrollIntoView({ block: "center" });
+  });
+  box.focus({ preventScroll: true });
+  box.scrollIntoView({ block: "start" });
+  return false;
 }
 
 // Envoi vers le formulaire en ligne configuré (Formspree ou équivalent).

@@ -28,7 +28,7 @@
     const c = pay.card;
     return `
       <div class="pay-box">
-        <h2><span class="pay-logo pay-logo--card" aria-hidden="true">▭</span> Payer par carte bancaire</h2>
+        <h2><span class="pay-logo pay-logo--card" aria-hidden="true">${ICON.card}</span> Payer par carte bancaire</h2>
         <ol class="pay-steps">
           <li>Ouvrez notre page de paiement sécurisée avec le bouton ci-dessous.</li>
           <li>Saisissez le montant exact : <strong>${euro(order.total)}</strong>.</li>
@@ -49,7 +49,7 @@
     const t = pay.transfer;
     return `
       <div class="pay-box">
-        <h2><span class="pay-logo pay-logo--virement" aria-hidden="true">€</span> Payer par virement instantané</h2>
+        <h2><span class="pay-logo pay-logo--virement" aria-hidden="true">${ICON.bank}</span> Payer par virement instantané</h2>
         <p>Indiquez <strong>impérativement la référence</strong> dans le libellé : c'est elle qui nous permet d'associer le paiement à votre commande.</p>
         <dl class="copy-list">
           ${copyRow("Titulaire", t.holder)}
